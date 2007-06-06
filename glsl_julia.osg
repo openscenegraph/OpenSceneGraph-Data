@@ -1,0 +1,217 @@
+Geode {
+  UniqueID Geode_0
+  DataVariance DYNAMIC
+  nodeMask 0xffffffff
+  cullingActive TRUE
+  StateSet {
+    DataVariance STATIC
+    rendering_hint DEFAULT_BIN
+    renderBinMode INHERIT
+    Uniform {
+      DataVariance DYNAMIC
+      name "Cimag"
+      float 0.11
+    }
+    Uniform {
+      DataVariance DYNAMIC
+      name "Creal"
+      float -0.765
+    }
+    Uniform {
+      DataVariance DYNAMIC
+      name "DiffuseContribution"
+      float 0.8
+    }
+    Uniform {
+      DataVariance DYNAMIC
+      name "InnerColor"
+      vec3 0 0 0
+    }
+    Uniform {
+      DataVariance DYNAMIC
+      name "LightPosition"
+      vec3 0 0 1
+    }
+    Uniform {
+      DataVariance DYNAMIC
+      name "MaxIterations"
+      float 100
+    }
+    Uniform {
+      DataVariance DYNAMIC
+      name "OuterColor1"
+      vec3 1 1 0
+    }
+    Uniform {
+      DataVariance DYNAMIC
+      name "OuterColor2"
+      vec3 1 0 0
+    }
+    Uniform {
+      DataVariance DYNAMIC
+      name "Shininess"
+      float 0.3
+    }
+    Uniform {
+      DataVariance DYNAMIC
+      name "SpecularContribution"
+      float 0.2
+    }
+    Uniform {
+      DataVariance DYNAMIC
+      name "Xcenter"
+      float 0
+    }
+    Uniform {
+      DataVariance DYNAMIC
+      name "Ycenter"
+      float 0
+    }
+    Uniform {
+      DataVariance DYNAMIC
+      name "Zoom"
+      float 0.7
+    }
+    Program {
+      DataVariance STATIC
+      num_shaders 2
+      Shader {
+        DataVariance DYNAMIC
+        type VERTEX
+        code {
+          "//"
+          "// Vertex shader for drawing Julia sets"
+          "//"
+          "// Authors: Dave Baldwin, Steve Koren, Randi Rost"
+          "//          based on a shader by Michael Rivero"
+          "//"
+          "// Copyright (c) 2002-2004: 3Dlabs, Inc."
+          "//"
+          "// See 3Dlabs-License.txt for license information"
+          "//"
+          ""
+          "uniform vec3 LightPosition;"
+          "uniform float SpecularContribution;"
+          "uniform float DiffuseContribution;"
+          "uniform float Shininess;"
+          ""
+          "varying float LightIntensity;"
+          "varying vec3  Position;"
+          ""
+          "void main(void)"
+          "{"
+          "    vec3 ecPosition = vec3 (gl_ModelViewMatrix * gl_Vertex);"
+          "    vec3 tnorm      = normalize(gl_NormalMatrix * gl_Normal);"
+          "    vec3 lightVec   = normalize(LightPosition - ecPosition);"
+          "    vec3 reflectVec = reflect(-lightVec, tnorm);"
+          "    vec3 viewVec    = normalize(-ecPosition);"
+          "    float spec      = max(dot(reflectVec, viewVec), 0.0);"
+          "    spec            = pow(spec, Shininess);"
+          "    LightIntensity  = DiffuseContribution * "
+          "                          max(dot(lightVec, tnorm), 0.0) +"
+          "                          SpecularContribution * spec;"
+          "    Position        = vec3(gl_MultiTexCoord0 - 0.5) * 5.0;"
+          "    gl_Position     = ftransform();"
+          ""
+          "}"
+        }
+      }
+      Shader {
+        DataVariance DYNAMIC
+        type FRAGMENT
+        code {
+          "//"
+          "// Fragment shader for drawing Julia sets"
+          "//"
+          "// Authors: Dave Baldwin, Steve Koren, Randi Rost"
+          "//          based on a shader by Michael Rivero"
+          "//"
+          "// Copyright (c) 2002-2004: 3Dlabs, Inc."
+          "//"
+          "// See 3Dlabs-License.txt for license information"
+          "//"
+          ""
+          "varying vec3  Position;"
+          "varying float LightIntensity;"
+          ""
+          "uniform float MaxIterations;"
+          "uniform float Zoom;"
+          "uniform float Xcenter;"
+          "uniform float Ycenter;"
+          "uniform vec3  InnerColor;"
+          "uniform vec3  OuterColor1;"
+          "uniform vec3  OuterColor2;"
+          "uniform float Creal;"
+          "uniform float Cimag;"
+          ""
+          "void main(void)"
+          "{"
+          "    float   real  = Position.x * Zoom + Xcenter;"
+          "    float   imag  = Position.y * Zoom + Ycenter;"
+          "    //float   Creal = real;   // Change this line..."
+          "    //float   Cimag = imag;   // ...and this one to get a Julia set"
+          ""
+          "    float r2 = 0.0;"
+          "    float iter;"
+          ""
+          "    for (iter = 0.0; iter < MaxIterations && r2 < 4.0; ++iter)"
+          "    {"
+          "        float tempreal = real;"
+          ""
+          "        real = (tempreal * tempreal) - (imag * imag) + Creal;"
+          "        imag = 2.0 * tempreal * imag + Cimag;"
+          "        r2   = (real * real) + (imag * imag);"
+          "    }"
+          ""
+          "    // Base the color on the number of iterations"
+          ""
+          "    vec3 color;"
+          ""
+          "    if (r2 < 4.0)"
+          "        color = InnerColor;"
+          "    else"
+          "        color = mix(OuterColor1, OuterColor2, fract(iter * 0.05));"
+          ""
+          "    color *= LightIntensity;"
+          ""
+          "    gl_FragColor = vec4 (color, 1.0);"
+          "}"
+        }
+      }
+    }
+  }
+  num_drawables 1
+  Geometry {
+    DataVariance DYNAMIC
+    useDisplayList TRUE
+    useVertexBufferObjects FALSE
+    PrimitiveSets 1
+    {
+      DrawArrays QUADS 0 4
+    }
+    VertexArray Vec3Array 4
+    {
+      0 0 1
+      0 0 0
+      1 0 0
+      1 0 1
+    }
+    NormalBinding OVERALL
+    NormalArray Vec3Array 1
+    {
+      0 -1 0
+    }
+    ColorBinding OVERALL
+    ColorArray Vec4Array 1
+    {
+      1 1 1 1
+    }
+    TexCoordArray 0 Vec2Array 4
+    {
+      0 1
+      0 0
+      1 0
+      1 1
+    }
+  }
+}

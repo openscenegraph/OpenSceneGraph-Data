@@ -1,0 +1,246 @@
+Group {
+  UniqueID Group_0
+  DataVariance DYNAMIC
+  nodeMask 0xffffffff
+  cullingActive TRUE
+  StateSet {
+    DataVariance STATIC
+    rendering_hint DEFAULT_BIN
+    renderBinMode INHERIT
+    Uniform {
+      DataVariance DYNAMIC
+      name "Color1"
+      vec3 0.5 1 1
+    }
+    Uniform {
+      DataVariance DYNAMIC
+      name "Color2"
+      vec3 1 0.5 0
+    }
+    Uniform {
+      DataVariance DYNAMIC
+      name "Sine"
+      float 0.1
+    }
+  }
+  UpdateCallbacks {
+    NodeCallback {
+      DataVariance DYNAMIC
+    }
+  }
+  num_children 2
+  PositionAttitudeTransform {
+    DataVariance DYNAMIC
+    nodeMask 0xffffffff
+    cullingActive TRUE
+    StateSet {
+      DataVariance STATIC
+      rendering_hint DEFAULT_BIN
+      renderBinMode INHERIT
+      Program {
+        UniqueID Program_1
+        DataVariance STATIC
+        num_shaders 2
+        Shader {
+          DataVariance DYNAMIC
+          type VERTEX
+          file shader.vert
+        }
+        Shader {
+          DataVariance DYNAMIC
+          type FRAGMENT
+          code {
+            "varying vec4 color;void main(void){gl_FragColor = clamp( color, 0.0, 1.0 );}"
+          }
+        }
+      }
+    }
+    referenceFrame RELATIVE
+    position 0 -1 0
+    attitude 0 0 0 1
+    scale 1 1 1
+    pivotPoint 0 0 0
+    num_children 1
+    Geode {
+      UniqueID Geode_2
+      DataVariance DYNAMIC
+      nodeMask 0xffffffff
+      cullingActive TRUE
+      num_drawables 3
+      ShapeDrawable {
+        DataVariance DYNAMIC
+        StateSet {
+          DataVariance STATIC
+          rendering_hint DEFAULT_BIN
+          renderBinMode INHERIT
+          Uniform {
+            DataVariance DYNAMIC
+            name "Color1"
+            vec3 0.2 0.8 1.0
+          }
+        }
+        Sphere {
+          DataVariance DYNAMIC
+          Center 0 0 0
+          Radius 1
+        }
+        useDisplayList TRUE
+        useVertexBufferObjects FALSE
+        color 1 1 1 1
+      }
+      ShapeDrawable {
+        DataVariance DYNAMIC
+        StateSet {
+          DataVariance STATIC
+          rendering_hint DEFAULT_BIN
+          renderBinMode INHERIT
+          Uniform {
+            DataVariance DYNAMIC
+            name "Color1"
+            vec3 0.9 0.2 0.2
+          }
+        }
+        Cone {
+          DataVariance DYNAMIC
+          Center 2.2 0 -0.4
+          Radius 0.9
+          Height 1.8
+          Rotation 0 0 0 1
+        }
+        useDisplayList TRUE
+        useVertexBufferObjects FALSE
+        color 1 1 1 1
+      }
+      ShapeDrawable {
+        DataVariance DYNAMIC
+        StateSet {
+          DataVariance STATIC
+          rendering_hint DEFAULT_BIN
+          renderBinMode INHERIT
+          Uniform {
+            DataVariance DYNAMIC
+            name "Color1"
+            vec3 0.2 0 0.8
+          }
+        }
+        Cylinder {
+          DataVariance DYNAMIC
+          Center 4.4 0 0
+          Radius 1
+          Height 1.4
+          Rotation 0 0 0 1
+        }
+        useDisplayList TRUE
+        useVertexBufferObjects FALSE
+        color 1 1 1 1
+      }
+    }
+  }
+  PositionAttitudeTransform {
+    DataVariance DYNAMIC
+    nodeMask 0xffffffff
+    cullingActive TRUE
+    StateSet {
+      DataVariance STATIC
+      rendering_hint DEFAULT_BIN
+      renderBinMode INHERIT
+      Program {
+        UniqueID Program_3
+        DataVariance STATIC
+        num_shaders 2
+        Shader {
+          DataVariance DYNAMIC
+          type FRAGMENT
+          code {
+            "// blocky.frag - an OGLSL fragment shader with animation"
+            "// Mike Weiblen 2003-09-16 : derived from brick.frag"
+            "// Copyright 2003 3Dlabs Inc."
+            "// see http://www.3dlabs.com/opengl2/ for more OpenGL Shading Language info."
+            ""
+            ""
+            "// the App updates uniforms \"slowly\" (eg once per frame) for animation."
+            "uniform float Sine;"
+            "uniform vec3 Color1;"
+            "uniform vec3 Color2;"
+            ""
+            "// varyings are written by vert shader, interpolated, and read by frag shader."
+            "varying vec2  BlockPosition;"
+            "varying float LightIntensity;"
+            ""
+            "void main(void)"
+            "{"
+            "    vec3 color;"
+            "    float ss, tt, w, h;"
+            "    "
+            "    ss = BlockPosition.x;"
+            "    tt = BlockPosition.y;"
+            ""
+            "    if (fract(tt * 0.5) > 0.5)"
+            "        ss += 0.5;"
+            ""
+            "    ss = fract(ss);"
+            "    tt = fract(tt);"
+            ""
+            "    // animate the proportion of block to mortar"
+            "    float blockFract = (Sine + 1.1) * 0.4;"
+            ""
+            "    w = step(ss, blockFract);"
+            "    h = step(tt, blockFract);"
+            ""
+            "    color = mix(Color2, Color1, w * h) * LightIntensity;"
+            "    gl_FragColor = vec4 (color, 1.0);"
+            "}"
+            ""
+          }
+        }
+        Shader {
+          DataVariance DYNAMIC
+          type VERTEX
+          code {
+            "// blocky.vert - an OGLSL vertex shader with animation"
+            "// Mike Weiblen 2003-09-16 : derived from brick.vert"
+            "// Copyright 2003 3Dlabs Inc."
+            "// see http://www.3dlabs.com/opengl2/ for more OpenGL Shading Language info."
+            ""
+            ""
+            "// the App updates uniforms \"slowly\" (eg once per frame) for animation."
+            "uniform float Sine;"
+            ""
+            "const vec3 LightPosition = vec3(0.0, 0.0, 4.0);"
+            "const float BlockScale = 0.30;"
+            ""
+            "// varyings are written by vert shader, interpolated, and read by frag shader."
+            "varying float LightIntensity;"
+            "varying vec2  BlockPosition;"
+            ""
+            "void main(void)"
+            "{"
+            "    // per-vertex diffuse lighting"
+            "    vec4 ecPosition	= gl_ModelViewMatrix * gl_Vertex;"
+            "    vec3 tnorm		= normalize(gl_NormalMatrix * gl_Normal);"
+            "    vec3 lightVec	= normalize(LightPosition - vec3 (ecPosition));"
+            "    LightIntensity	= max(dot(lightVec, tnorm), 0.0); "
+            ""
+            "    // blocks will be determined by fragment's position on the XZ plane."
+            "    BlockPosition = gl_Vertex.xz / BlockScale;"
+            ""
+            "    // scale the geometry based on an animation variable."
+            "    vec4 vertex	= gl_Vertex;"
+            "    vertex.w	= 1.0 + 0.4 * (Sine + 1.0);"
+            ""
+            "    gl_Position	= gl_ModelViewProjectionMatrix * vertex;"
+            "}"
+            ""
+          }
+        }
+      }
+    }
+    referenceFrame RELATIVE
+    position 0 -1 2.2
+    attitude 0 0 0 1
+    scale 1 1 1
+    pivotPoint 0 0 0
+    num_children 1
+    Use Geode_2
+  }
+}

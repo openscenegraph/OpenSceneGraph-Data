@@ -1,0 +1,21 @@
+If not otherwise specified all files in the OpenSceneGraph-Data are provided free 
+for non commericial usage. Comericial users may use the data for testing and development purposes,
+but may not distribute these models with commericial products.
+
+Thanks to:
+
+    Image/land_shallow_topo_2048.jpg is slightly lightened version of the
+    Nasa blue marble data which is published in the public domain,
+    http://earthobservatory.nasa.gov/Newsroom/BlueMarble/
+
+    aferescher.geo and associated images are provided by carbongraphics.com
+
+    osgcool.osg, fountain.osg and cessnafire.osg were provided by Marco Jez.
+
+    cube_mapped_torus.osd and Cubemap_axis/ images were provided by Brede Johansen.
+    
+    Cubemap_snow/ images provided by Humus - http://esprit.campus.luth.se/~humus/
+    
+    shaders/ were provided by Mike Weiblen.
+    
+    The rest of the files are compiled by Don Burns and Robert Osfield.
