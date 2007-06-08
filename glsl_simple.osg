@@ -44,7 +44,7 @@ Group {
         Shader {
           DataVariance DYNAMIC
           type VERTEX
-          file shader.vert
+          file shaders/shader.vert
         }
         Shader {
           DataVariance DYNAMIC
