@@ -1,5 +1,5 @@
-uniform float y0;
-uniform float inverse_one_minus_y0;
+uniform float exponent_offset;
+uniform float exponent_scale;
 
 vec3 fnormal(void)
 {
@@ -36,9 +36,22 @@ void directionalLight(in int i,
    specular += gl_LightSource[i].specular * pf;
 }
 
+#if 1
+vec4 warp(in vec4 source)
+{
+    float divisor = exp2(source.y/source.w);
+    return vec4(source.x/divisor, source.y, source.z, source.w);
+}
+#else
+vec4 warp(in vec4 source)
+{
+    return source;
+}
+#endif
+
 void main()
 {
-    gl_Position = ftransform();
+    gl_Position = warp(ftransform());
     
     vec4 ambient = vec4(0.0);
     vec4 diffuse = vec4(0.0);
@@ -54,4 +67,5 @@ void main()
                  specular * gl_FrontMaterial.specular;
         
     gl_FrontColor = color;
+    gl_FrontColor.x = 0.0;
 }
