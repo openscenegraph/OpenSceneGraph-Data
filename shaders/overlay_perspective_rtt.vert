@@ -1,18 +1,11 @@
 uniform float y0;
+uniform bool lightingEnabled;
 
-
-#if 1
 vec4 warp(in vec4 source)
 {
     float divisor = source.y + y0;
-    return vec4(source.x * (1.0 + y0 ), source.y * y0 + 1.0, (source.z * y0 + 1.0)*0.05, source.w * divisor);
+    return vec4(source.x * (1.0 + y0 ), source.y * y0 + 1.0, (source.z * y0 + 1.0)*0.01, source.w * divisor);
 }
-#else
-vec4 warp(in vec4 source)
-{
-    return source;
-}
-#endif
 
 
 vec3 fnormal(void)
@@ -53,24 +46,28 @@ void main()
 {
     gl_Position = warp(ftransform());
     
-    vec4 ambient = vec4(0.0);
-    vec4 diffuse = vec4(0.0);
-    vec4 specular = vec4(0.0);
-    
-    vec3 normal = fnormal();
-    
-    directionalLight(0, normal, ambient, diffuse, specular);
+    if (lightingEnabled)
+    {    
+        vec4 ambient = vec4(0.0);
+        vec4 diffuse = vec4(0.0);
+        vec4 specular = vec4(0.0);
 
-    vec4 color = gl_FrontLightModelProduct.sceneColor +
-                 ambient  * gl_FrontMaterial.ambient +
-                 diffuse  * gl_FrontMaterial.diffuse +
-                 specular * gl_FrontMaterial.specular;
 
-#if 0        
-    if (gl_Position.y < 0.0) color.r = 0.0;
-    if (gl_Position.x < 0.0) color.g = 0.0;
-#endif
-    gl_FrontColor = color;
-    
+        vec3 normal = fnormal();
+
+        directionalLight(0, normal, ambient, diffuse, specular);
+
+        vec4 color = gl_FrontLightModelProduct.sceneColor +
+                     ambient  * gl_FrontMaterial.ambient +
+                     diffuse  * gl_FrontMaterial.diffuse +
+                     specular * gl_FrontMaterial.specular;
+
+        gl_FrontColor = color;
+
+    }
+    else
+    {
+        gl_FrontColor = gl_Color;
+    }
     
 }
