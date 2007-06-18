@@ -1,11 +1,7 @@
-uniform float y0;
+uniform float filterWidth;
 uniform bool lightingEnabled;
 
-vec4 warp(in vec4 source)
-{
-    float divisor = source.y + y0;
-    return vec4(source.x * (1.0 + y0 ), source.y * y0 + 1.0, (source.z * y0 + 1.0)*0.01, source.w * divisor);
-}
+varying vec2 texcoord[9];
 
 
 vec3 fnormal(void)
@@ -43,10 +39,12 @@ void directionalLight(in int i,
    specular += gl_LightSource[i].specular * pf;
 }
 
+
+
 void main()
 {
-    gl_Position = warp(ftransform());
-    
+    gl_Position = ftransform();
+
     if (lightingEnabled)
     {    
         vec4 ambient = vec4(0.0);
@@ -70,5 +68,17 @@ void main()
     {
         gl_FrontColor = gl_Color;
     }
+
+    float delta = filterWidth;
+
+    texcoord[0].xy = gl_MultiTexCoord0.xy + vec2(-delta, delta);
+    texcoord[1].xy = gl_MultiTexCoord0.xy + vec2(-delta, 0);
+    texcoord[2].xy = gl_MultiTexCoord0.xy + vec2(-delta, -delta);
+    texcoord[3].xy = gl_MultiTexCoord0.xy + vec2(0, delta);
+    texcoord[4].xy = gl_MultiTexCoord0.xy + vec2(0, 0);
+    texcoord[5].xy = gl_MultiTexCoord0.xy + vec2(0, -delta);
+    texcoord[6].xy = gl_MultiTexCoord0.xy + vec2(delta, delta);
+    texcoord[7].xy = gl_MultiTexCoord0.xy + vec2(delta, 0);
+    texcoord[8].xy = gl_MultiTexCoord0.xy + vec2(delta, -delta);
     
 }
