@@ -1,0 +1,4 @@
+osgViewer::Viewer
+{
+    setUpViewInWindow 100 200 600 400 0
+}
