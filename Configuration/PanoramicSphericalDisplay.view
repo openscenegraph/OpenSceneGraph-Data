@@ -3,7 +3,6 @@ osgViewer::View
     setUpViewForPanoramicSphericalDisplay
     {
         radius 1.0
-        collar 0.45
-        intensityMap "Images/lz.rgb"
+        collar 0.43
     }
 }

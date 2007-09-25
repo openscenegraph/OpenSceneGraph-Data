@@ -3,7 +3,6 @@ osgViewer::View
     setUpViewFor3DSphericalDisplay
     {
         radius 1.0
-        collar 0.5
-        intensityMap "Images/lz.rgb"
+        collar 0.43
     }
 }
