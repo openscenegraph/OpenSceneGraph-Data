@@ -4,5 +4,12 @@ osgViewer::View
     {
         radius 1.0
         collar 0.43
+        intensityMap
+        {
+            0 100
+            90 100
+            135 50
+            180 0
+        }
     }
 }
