@@ -1,8 +1,12 @@
 If not otherwise specified all files in the OpenSceneGraph-Data are provided free 
-for non commericial usage. Comericial users may use the data for testing and development purposes,
+for non commericial usage. Commericial users may use the data for testing and development purposes,
 but may not distribute these models with commericial products.
 
 Thanks to:
+
+    The Configure/*.view files are all published in the public domain, you 
+    may do with them what you wish, you can copy them into commericial or 
+    non commercial works, and open source works as required.
 
     Image/land_shallow_topo_2048.jpg is slightly lightened version of the
     Nasa blue marble data which is published in the public domain,
