@@ -1,0 +1,22 @@
+osgViewer::View
+{
+    setUpViewFor3DSphericalDisplay
+    {
+        radius 1.0
+        collar 0.43
+        intensityMap
+        {
+            0 100
+            90 100
+            135 50
+            180 0
+        }
+        projectorMatrix
+        {
+            1 0 0 0
+            0 -1 0 0
+            0 0 -1 0
+            0 0 0 1
+        }
+    }
+}
