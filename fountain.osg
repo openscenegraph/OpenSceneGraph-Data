@@ -39900,7 +39900,6 @@ Group {
         binNumber 1
         binName DepthSortedBin
         GL_LIGHTING OFF
-        GL_COLOR_MATERIAL ON
         GL_BLEND ON
         Material {
           DataVariance STATIC
