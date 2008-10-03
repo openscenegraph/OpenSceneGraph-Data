@@ -20559,7 +20559,6 @@ Group {
             binNumber 1
             binName DepthSortedBin
             GL_LIGHTING OFF
-            GL_COLOR_MATERIAL ON
             GL_BLEND ON
             Material {
               UniqueID Material_4
@@ -20693,7 +20692,6 @@ Group {
             binNumber 1
             binName DepthSortedBin
             GL_LIGHTING OFF
-            GL_COLOR_MATERIAL ON
             GL_BLEND ON
             Use Material_4
             BlendFunc {
