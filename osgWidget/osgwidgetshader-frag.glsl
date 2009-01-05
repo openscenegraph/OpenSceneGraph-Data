@@ -3,21 +3,25 @@
 
 varying vec4 color;
 
-void main() {
-	// TODO: This doesn't work?
-	vec4 c = clamp(color, 0.0, 1.0);
+void main()
+{
+    vec4 c = clamp(color, 0.0, 1.0);
 
-	if(int(gl_FragCoord.y) % 10 >= 3) gl_FragColor = c * vec4(
-		gl_FragCoord.y / 1024.0,
-		gl_FragCoord.y / 1024.0,
-		gl_FragCoord.y / 1024.0,
-		0.5
-	);
+    if(mod(gl_FragCoord.y, 10.0) >= 3.0)
+    {
+        gl_FragColor = c * vec4(
+            gl_FragCoord.y / 1024.0,
+            gl_FragCoord.y / 1024.0,
+            gl_FragCoord.y / 1024.0,
+            0.5);
 
-	else gl_FragColor = c * vec4(
-		gl_FragCoord.y / 1024.0,
-		gl_FragCoord.y / 1024.0,
-		gl_FragCoord.y / 1024.0,
-		1.0
-	);
+    }
+    else
+    {
+       gl_FragColor = c * vec4(
+            gl_FragCoord.y / 1024.0,
+            gl_FragCoord.y / 1024.0,
+            gl_FragCoord.y / 1024.0,
+            1.0);
+    }
 }
