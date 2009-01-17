@@ -2,7 +2,7 @@ uniform sampler3D baseTexture;
 uniform sampler1D tfTexture;
 uniform float sampleDensity;
 uniform float transparency;
-uniform float alphaCutOff;
+uniform float IsoSurfaceValue;
 
 varying vec4 cameraPos;
 varying vec4 vertexPos;
@@ -84,10 +84,10 @@ void main(void)
 
         float v = texture3D( baseTexture, texcoord).a;
 
-        float m = (previousV-alphaCutOff) * (v-alphaCutOff);
+        float m = (previousV-IsoSurfaceValue) * (v-IsoSurfaceValue);
         if (m <= 0.0)
         {
-            float r = (alphaCutOff-v)/(previousV-v);
+            float r = (IsoSurfaceValue-v)/(previousV-v);
             texcoord = texcoord - r*deltaTexCoord;
 
             v = texture3D( baseTexture, texcoord).a;
@@ -123,6 +123,5 @@ void main(void)
     }
 
     if (fragColor.w>1.0) fragColor.w = 1.0; 
-    if (fragColor.w<alphaCutOff) discard;
     gl_FragColor = fragColor;
 }
