@@ -100,22 +100,17 @@ void main(void)
             float nz = texture3D( baseTexture, texcoord - deltaZ).a;
             
             vec3 grad = vec3(px-nx, py-ny, pz-nz);
-            vec3 normal = normalize(grad);
+            if (grad.x!=0.0 || grad.y!=0.0 || grad.z!=0.0)
+            {
+                vec3 normal = normalize(grad);
+                float lightScale = 0.1 +  abs(dot(normal.xyz, eyeDirection))*0.9;
 
-            float lightScale = 0.1 +  abs(dot(normal.xyz, eyeDirection));
-            
-            
-#if 0
-            color.x *= lightScale;
-            color.y *= lightScale;
-            color.z *= lightScale;
-#else
-            color.x = lightScale;
-            color.y = lightScale;
-            color.z = lightScale;
-#endif
-
-            fragColor = vec4(lightScale, lightScale, lightScale, 1.0);
+                fragColor = vec4(lightScale, lightScale, lightScale, 1.0);
+            }
+            else
+            {
+                fragColor = vec4(lightScale, lightScale, lightScale, 1.0);
+            }
             
             break;
         }
