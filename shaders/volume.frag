@@ -1,6 +1,6 @@
 uniform sampler3D baseTexture;
-uniform float sampleDensity;
-uniform float transparency;
+uniform float SampleDensityValue;
+uniform float TransparencyValue;
 uniform float AlphaFuncValue;
 
 varying vec4 cameraPos;
@@ -58,7 +58,7 @@ void main(void)
     }
 
     const float max_iteratrions = 2048.0;
-    float num_iterations = ceil(length(te-t0)/sampleDensity);
+    float num_iterations = ceil(length(te-t0)/SampleDensityValue);
     if (num_iterations<2.0) num_iterations = 2.0;
 
     if (num_iterations>max_iteratrions) 
@@ -73,7 +73,7 @@ void main(void)
     while(num_iterations>0.0)
     {
         vec4 color = texture3D( baseTexture, texcoord);
-        float r = color[3]*transparency;
+        float r = color[3]*TransparencyValue;
         if (r>AlphaFuncValue)
         {
             fragColor.xyz = fragColor.xyz*(1.0-r)+color.xyz*r;
@@ -89,7 +89,7 @@ void main(void)
         --num_iterations;
     }
 
-    fragColor.w *= transparency;
+    fragColor.w *= TransparencyValue;
 
     if (fragColor.w>1.0) fragColor.w = 1.0; 
     if (fragColor.w<AlphaFuncValue) discard;
