@@ -1,7 +1,7 @@
 uniform sampler3D baseTexture;
 uniform sampler1D tfTexture;
-uniform float sampleDensity;
-uniform float transparency;
+uniform float SampleDensityValue;
+uniform float TransparencyValue;
 uniform float IsoSurfaceValue;
 
 varying vec4 cameraPos;
@@ -61,7 +61,7 @@ void main(void)
     }
 
     const float max_iteratrions = 2048.0;
-    float num_iterations = ceil(length(te-t0)/sampleDensity);
+    float num_iterations = ceil(length(te-t0)/SampleDensityValue);
     if (num_iterations<2.0) num_iterations = 2.0;
     
     if (num_iterations>max_iteratrions) 
