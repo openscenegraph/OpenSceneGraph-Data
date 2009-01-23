@@ -23781,6 +23781,11 @@ Group {
         -0.999955 -0.004066 -0.008571
         -0.999955 -0.004066 -0.008571
       }
+      ColorBinding OVERALL
+      ColorArray Vec4Array 1
+      {
+        0.8 0.8 0.8 1
+      }
     }
     Geometry {
       DataVariance DYNAMIC
