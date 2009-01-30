@@ -100,19 +100,27 @@ void main(void)
             float nz = texture3D( baseTexture, texcoord - deltaZ).a;
             
             vec3 grad = vec3(px-nx, py-ny, pz-nz);
-            if (grad.x!=0.0 || grad.y!=0.0 || grad.z!=0.0)
-            {
-                vec3 normal = normalize(grad);
-                float lightScale = 0.1 +  abs(dot(normal.xyz, eyeDirection))*0.9;
+            vec3 normal = normalize(grad);
 
-                fragColor = vec4(lightScale, lightScale, lightScale, 1.0);
-            }
-            else
-            {
-                fragColor = vec4(lightScale, lightScale, lightScale, 1.0);
-            }
+            float lightScale = 0.1 +  abs(dot(normal.xyz, eyeDirection))*0.9;
             
-            break;
+            
+#if 0
+            color.x *= lightScale;
+            color.y *= lightScale;
+            color.z *= lightScale;
+#else
+            color.x = lightScale;
+            color.y = lightScale;
+            color.z = lightScale;
+#endif
+
+            fragColor = vec4(lightScale, lightScale, lightScale, 1.0);
+            
+            if (fragColor.w>1.0) fragColor.w = 1.0; 
+            gl_FragColor = fragColor;
+            
+            return;
         }
         
         previousColor = color;
@@ -122,6 +130,6 @@ void main(void)
         --num_iterations;
     }
 
-    if (fragColor.w>1.0) fragColor.w = 1.0; 
-    gl_FragColor = fragColor;
+    // we didn't find an intersection so just discard fragment
+    discard;
 }
