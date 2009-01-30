@@ -80,6 +80,7 @@ void main(void)
     while(num_iterations>0.0)
     {
         vec4 color = texture3D( baseTexture, texcoord);
+
         float a = color.a;
         float px = texture3D( baseTexture, texcoord + deltaX).a;
         float py = texture3D( baseTexture, texcoord + deltaY).a;
@@ -90,7 +91,6 @@ void main(void)
         float nz = texture3D( baseTexture, texcoord - deltaZ).a;
 
         vec3 grad = vec3(px-nx, py-ny, pz-nz);
-
         if (grad.x!=0.0 || grad.y!=0.0 || grad.z!=0.0)
         {
             vec3 normal = normalize(grad);
@@ -102,21 +102,25 @@ void main(void)
         }
 
         float r = color[3]*TransparencyValue;
-        if (r>=AlphaFuncValue)
+        if (r>AlphaFuncValue)
         {
             fragColor.xyz = fragColor.xyz*(1.0-r)+color.xyz*r;
             fragColor.w += r;
         }
 
+        if (fragColor.w<color.w)
+        {
+            fragColor = color;
+        }
         texcoord += deltaTexCoord; 
 
         --num_iterations;
     }
 
+    fragColor.w *= TransparencyValue;
+
     if (fragColor.w>1.0) fragColor.w = 1.0; 
     if (fragColor.w<AlphaFuncValue) discard;
-    
-    fragColor.w = 1.0;
     
     gl_FragColor = fragColor;
 }
