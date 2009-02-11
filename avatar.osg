@@ -30073,7 +30073,7 @@ Group {
                             GL_TEXTURE_2D ON
                             Texture2D {
                               UniqueID uniqid_Texture2D_190
-                              file "textures/brow.l.tga"
+                              file "Images/brow.l.tga"
                               wrap_s REPEAT
                               wrap_t REPEAT
                               wrap_r REPEAT
@@ -30208,7 +30208,7 @@ Group {
                             GL_TEXTURE_2D ON
                             Texture2D {
                               UniqueID uniqid_Texture2D_199
-                              file "textures/nose.tga"
+                              file "Images/nose.tga"
                               wrap_s REPEAT
                               wrap_t REPEAT
                               wrap_r REPEAT
@@ -30454,7 +30454,7 @@ Group {
                             GL_TEXTURE_2D ON
                             Texture2D {
                               UniqueID uniqid_Texture2D_207
-                              file "textures/mouth.tga"
+                              file "Images/mouth.tga"
                               wrap_s REPEAT
                               wrap_t REPEAT
                               wrap_r REPEAT
@@ -30616,7 +30616,7 @@ Group {
                             GL_TEXTURE_2D ON
                             Texture2D {
                               UniqueID uniqid_Texture2D_215
-                              file "textures/eye.l.tga"
+                              file "Images/eye.l.tga"
                               wrap_s REPEAT
                               wrap_t REPEAT
                               wrap_r REPEAT
@@ -30763,7 +30763,7 @@ Group {
                             GL_TEXTURE_2D ON
                             Texture2D {
                               UniqueID uniqid_Texture2D_223
-                              file "textures/brow.l.tga"
+                              file "Images/brow.l.tga"
                               wrap_s REPEAT
                               wrap_t REPEAT
                               wrap_r REPEAT
@@ -31491,7 +31491,7 @@ Group {
                             GL_TEXTURE_2D ON
                             Texture2D {
                               UniqueID uniqid_Texture2D_239
-                              file "textures/eye.l.tga"
+                              file "Images/eye.l.tga"
                               wrap_s REPEAT
                               wrap_t REPEAT
                               wrap_r REPEAT
@@ -31639,7 +31639,7 @@ Group {
                         GL_TEXTURE_2D ON
                         Texture2D {
                           UniqueID uniqid_Texture2D_125
-                          file "textures/skin.tga"
+                          file "Images/skin.tga"
                           wrap_s REPEAT
                           wrap_t REPEAT
                           wrap_r REPEAT
@@ -32226,7 +32226,7 @@ Group {
               GL_TEXTURE_2D ON
               Texture2D {
                 UniqueID uniqid_Texture2D_139
-                file "textures/dark_grey.tga"
+                file "Images/dark_grey.tga"
                 wrap_s REPEAT
                 wrap_t REPEAT
                 wrap_r REPEAT
@@ -34686,7 +34686,7 @@ Group {
               GL_TEXTURE_2D ON
               Texture2D {
                 UniqueID uniqid_Texture2D_156
-                file "textures/red.tga"
+                file "Images/red.tga"
                 wrap_s REPEAT
                 wrap_t REPEAT
                 wrap_r REPEAT
@@ -37796,7 +37796,7 @@ Group {
               GL_TEXTURE_2D ON
               Texture2D {
                 UniqueID uniqid_Texture2D_173
-                file "textures/dark_grey.tga"
+                file "Images/dark_grey.tga"
                 wrap_s REPEAT
                 wrap_t REPEAT
                 wrap_r REPEAT
@@ -39865,7 +39865,7 @@ Group {
               GL_TEXTURE_2D ON
               Texture2D {
                 UniqueID uniqid_Texture2D_256
-                file "textures/red.tga"
+                file "Images/red.tga"
                 wrap_s REPEAT
                 wrap_t REPEAT
                 wrap_r REPEAT
@@ -41699,7 +41699,7 @@ Group {
               GL_TEXTURE_2D ON
               Texture2D {
                 UniqueID uniqid_Texture2D_270
-                file "textures/red.tga"
+                file "Images/red.tga"
                 wrap_s REPEAT
                 wrap_t REPEAT
                 wrap_r REPEAT
