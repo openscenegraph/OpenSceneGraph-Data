@@ -104,9 +104,9 @@ void main(void)
                 vec3 normal = normalize(grad);
                 float lightScale = 0.1 +  abs(dot(normal.xyz, eyeDirection))*0.9;
 
-                color.x *= lightScale;
-                color.y *= lightScale;
-                color.z *= lightScale;
+                color.x = lightScale;
+                color.y = lightScale;
+                color.z = lightScale;
             }
             
             if (color.w>1.0) color.w = 1.0; 
