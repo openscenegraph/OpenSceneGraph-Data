@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : Introduction.p3d
+    Created on : 27th April 2009
+    Author     : Robert Osfield
+    Description: Introduction to OpenSceneGraph/Present3D
+-->
+
+<presentation>
+
+<env>OSG_COMPUTE_NEAR_FAR_MODE=COMPUTE_NEAR_FAR_USING_PRIMITIVES</env>
+<env>OSG_NEAR_FAR_RATIO=0.00001</env>
+
+<text-settings character_size="0.035"></text-settings>
+<textcolor>YELLOW</textcolor>
+<bgcolor>SKY</bgcolor>
+
+<slide>
+<textcolor>0.20 0.45 0.60 1.0</textcolor>
+<title></title>
+<layer>
+    <paragraph position="0.5 0.7 0.01" alignment="CENTER_CENTER" character_size="0.05">Introduction to</paragraph>
+    <image position="0.5 0.60 0.0" scale="0.7">Present3D/OpenSceneGraphlogo.png</image>
+    <paragraph position="0.5 0.5 0.01" alignment="CENTER_CENTER" character_size="0.05">and</paragraph>
+    <image position="0.5 0.40 0.0" scale="0.7">Present3D/present3dwhite.png</image>
+</layer>
+</slide>
+
+<slide>
+<title>Motivation for Open Source</title>
+<layer>
+    <model position="0.5 0.5 0.0" rotate="20 1 0 0" scale="2">lz.osg</model>
+
+    <bullet> </bullet>
+    <bullet>"Scratch the itch" not some moral crusade</bullet>
+</layer>
+<layer>
+<paragraph>
+1997 Don Burns, SGI in California, start works on Hang glider simulator just for fun
+
+1998 Robert Osfield, based in Scotland, introduced for aeronatical expertise.
+
+Robert gets addicated to real-time graphics side to the project
+
+1999 decide to open source the graphics side...
+
+OpenSceneGraph is born
+</paragraph>
+</layer>
+</slide>
+
+<slide>
+<title>Open Souce licensing</title>
+<layer>
+<model position="0.5 0.5 0.0" rotate="20 1 0 0" scale="2">lz.osg</model>
+<paragraph>
+Users are explicitly given rights
+
+Copy:
+ 
+    As many copies as you wish, and not cost
+
+Modify:
+ 
+    Full access to source,
+    and right to modify it to you own needs
+
+
+Distribute:
+ 
+    Right to distribute original works and
+    modifications
+
+</paragraph>
+</layer>
+</slide>
+
+
+<slide>
+<background></background>
+<title>The impact of the licensing model</title>
+<layer>
+<model position="0.5 0.5 0.0" rotate="20 1 0 0" scale="2">lz.osg</model>
+
+<paragraph>
+
+Copy:
+ 
+    Lowers the barrier to entry
+    Removes the painful procurment process
+    Lower costs, means you can afford more
+
+
+Modify: 
+ 
+    Fix things when they don't work
+    Port to new platforms
+    Add new features
+
+
+Distribute:
+ 
+    Opens the door to different distribution models
+    No longer need to pay royalty payments
+</paragraph>
+      </layer>
+   </slide>
+
+<slide>
+<title>The impact of the licensing model</title>
+<layer>
+<model position="0.5 0.5 0.0" rotate="20 1 0 0" scale="2">lz.osg</model>
+<paragraph>
+ 
+Security:
+ 
+    Breaks vendor lock-in
+    You have full source code
+    You can maitain it yourself
+    You can fully QA source code
+ 
+Productivity:
+ 
+    You can control release schedule
+    You can modify software as required
+    You can facilitate full platform support
+</paragraph>
+</layer>
+</slide>
+
+<slide>
+<background></background>
+<title>Networking Effects of Open Source</title>
+<layer>
+<model position="0.5 0.5 0.0" rotate="20 1 0 0" scale="2">lz.osg</model>
+
+<paragraph>
+Community:
+ 
+    Like-mind individuals provide support
+    Sharing of expertise
+    Non adversarily - share and share alike
+    Diverse community - diverse contributions
+
+24/7 availability:
+ 
+    Latest developments get rapidly tested
+    Bug fix turnaround very rapid
+    Positive feedback loop on quality
+    Much faster release schedule
+</paragraph>
+</layer>
+</slide>
+
+<slide>
+<title>Personal Development Philosophy</title>
+<layer>
+<model position="0.5 1.0 0.0" rotate="20 1 0 0" scale="10">lz.osg</model>
+<paragraph>
+Catch phrase coding:
+  
+     Release Early - Release Often
+ 
+     Priortize bug fixing over feature development
+ 
+     If it ain't broke don't fix it
+ 
+     Prepare to throw one away, you will anyhow
+ 
+     Grand plans come undone
+ 
+     Milestones should only be a stones through away
+ 
+     Know where you are going - use an 
+     internal compass when you run off the map
+</paragraph>
+</layer>
+</slide>
+
+</presentation>
