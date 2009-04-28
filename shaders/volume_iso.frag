@@ -108,8 +108,9 @@ void main(void)
                 color.y = lightScale;
                 color.z = lightScale;
             }
-            
-            if (color.w>1.0) color.w = 1.0; 
+
+            color.a = 1.0;
+
             gl_FragColor = color;
             
             return;
