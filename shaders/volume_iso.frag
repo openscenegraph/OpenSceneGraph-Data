@@ -9,11 +9,9 @@ varying mat4 texgen;
 
 void main(void)
 { 
-
-    vec3 t0 = (texgen * vertexPos).xyz;
-    vec3 te = (texgen * cameraPos).xyz;
-
-    vec3 eyeDirection = normalize(te-t0);
+    vec4 t0 = vertexPos;
+    vec4 te = cameraPos;
+    vec3 eyeDirection = normalize((te-t0).xyz);
 
     if (te.x>=0.0 && te.x<=1.0 &&
         te.y>=0.0 && te.y<=1.0 &&
@@ -60,8 +58,11 @@ void main(void)
         }
     }
 
+    t0 = t0 * texgen;
+    te = te * texgen;
+
     const float max_iteratrions = 2048.0;
-    float num_iterations = ceil(length(te-t0)/SampleDensityValue);
+    float num_iterations = ceil(length((te-t0).xyz)/SampleDensityValue);
     if (num_iterations<2.0) num_iterations = 2.0;
 
     if (num_iterations>max_iteratrions) 
@@ -69,8 +70,8 @@ void main(void)
         num_iterations = max_iteratrions;
     }
 
-    vec3 deltaTexCoord=(t0-te)/float(num_iterations-1.0);
-    vec3 texcoord = te;
+    vec3 deltaTexCoord=(t0-te).xyz/float(num_iterations-1.0);
+    vec3 texcoord = te.xyz;
 
     vec4 previousColor = texture3D( baseTexture, texcoord);
     
