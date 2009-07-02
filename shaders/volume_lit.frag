@@ -9,10 +9,8 @@ varying mat4 texgen;
 
 void main(void)
 { 
-    vec3 t0 = (texgen * vertexPos).xyz;
-    vec3 te = (texgen * cameraPos).xyz;
-    
-    vec3 eyeDirection = normalize(te-t0);
+    vec4 t0 = vertexPos;
+    vec4 te = cameraPos;
 
     if (te.x>=0.0 && te.x<=1.0 &&
         te.y>=0.0 && te.y<=1.0 &&
@@ -59,8 +57,13 @@ void main(void)
         }
     }
 
+    t0 = t0 * texgen;
+    te = te * texgen;
+
+    vec3 eyeDirection = normalize((te-t0).xyz);
+
     const float max_iteratrions = 2048.0;
-    float num_iterations = ceil(length(te-t0)/SampleDensityValue);
+    float num_iterations = ceil(length((te-t0).xyz)/SampleDensityValue);
     if (num_iterations<2.0) num_iterations = 2.0;
 
     if (num_iterations>max_iteratrions) 
@@ -68,8 +71,8 @@ void main(void)
         num_iterations = max_iteratrions;
     }
 
-    vec3 deltaTexCoord=(te-t0)/float(num_iterations-1.0);
-    vec3 texcoord = t0;
+    vec3 deltaTexCoord=(te-t0).xyz/float(num_iterations-1.0);
+    vec3 texcoord = t0.xyz;
 
     float normalSampleDistance = 1.0/512.0;
     vec3 deltaX = vec3(normalSampleDistance, 0.0, 0.0);
