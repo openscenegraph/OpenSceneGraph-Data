@@ -1,5 +1,9 @@
 uniform sampler3D baseTexture;
+
 uniform sampler1D tfTexture;
+uniform float tfScale;
+uniform float tfOffset;
+
 uniform float SampleDensityValue;
 uniform float TransparencyValue;
 uniform float IsoSurfaceValue;
@@ -91,7 +95,7 @@ void main(void)
             float r = (IsoSurfaceValue-v)/(previousV-v);
             texcoord = texcoord - r*deltaTexCoord;
 
-            v = texture3D( baseTexture, texcoord).a;
+            v = texture3D( baseTexture, texcoord).a * tfScale + tfOffset;
             vec4 color = texture1D( tfTexture, v);
 
             float px = texture3D( baseTexture, texcoord + deltaX).a;
