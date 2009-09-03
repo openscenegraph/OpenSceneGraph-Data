@@ -1,5 +1,9 @@
 uniform sampler3D baseTexture;
+
 uniform sampler1D tfTexture;
+uniform float tfScale;
+uniform float tfOffset;
+
 uniform float SampleDensityValue;
 uniform float TransparencyValue;
 uniform float AlphaFuncValue;
@@ -73,7 +77,7 @@ void main(void)
     vec4 fragColor = vec4(0.0, 0.0, 0.0, 0.0); 
     while(num_iterations>0.0)
     {
-        float v = texture3D( baseTexture, texcoord).s;
+        float v = texture3D( baseTexture, texcoord).s * tfScale + tfOffset;
         vec4 color = texture1D( tfTexture, v);
         if (fragColor.w<color.w)
         {
