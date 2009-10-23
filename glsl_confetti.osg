@@ -54,7 +54,7 @@ Geode {
       }
     }
     initialBound -10 -10 -10 10 10 10
-    useDisplayList TRUE
+    useDisplayList FALSE
     useVertexBufferObjects FALSE
     PrimitiveSets 1
     {
