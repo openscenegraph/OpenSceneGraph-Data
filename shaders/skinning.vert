@@ -17,14 +17,8 @@ in vec4 boneWeight1;
 in vec4 boneWeight2;
 in vec4 boneWeight3;
 
-in vec4 gl_Vertex;
-in vec3 gl_Normal;
-
 uniform int nbBonesPerVertex;
 uniform mat4 matrixPalette[MAX_MATRIX];
-
-uniform mat4 gl_ModelViewMatrix;
-uniform mat4 gl_ProjectionMatrix;
 
 vec4 position;
 vec3 normal;
