@@ -18320,6 +18320,7 @@ Group {
             }
             StateSet {
               UniqueID uniqid_StateSet_1125
+	      rendering_hint TRANSPARENT_BIN
               name "Material"
               GL_BLEND ON
               Material {
