@@ -1,0 +1,303 @@
+#Ascii Scene 
+#Version 78 
+#Generator OpenSceneGraph 2.9.17 
+
+osg::Geode {
+  UniqueID 1 
+  Name "glsl_mandelbrot.osg" 
+  DataVariance DYNAMIC 
+  StateSet TRUE {
+    osg::StateSet {
+      UniqueID 2 
+      DataVariance STATIC 
+      AttributeList 1 {
+        osg::Program {
+          UniqueID 3 
+          DataVariance STATIC 
+          Shaders 2 {
+            osg::Shader {
+              UniqueID 4 
+              DataVariance DYNAMIC 
+              Type VERTEX 
+              ShaderSource 35 {
+                "//" 
+                "// Vertex shader for drawing the Mandelbrot set" 
+                "//" 
+                "// Authors: Dave Baldwin, Steve Koren, Randi Rost" 
+                "//          based on a shader by Michael Rivero" 
+                "//" 
+                "// Copyright (c) 2002-2004: 3Dlabs, Inc." 
+                "//" 
+                "// See 3Dlabs-License.txt for license information" 
+                "//" 
+                "" 
+                "uniform vec3 LightPosition;" 
+                "uniform float SpecularContribution;" 
+                "uniform float DiffuseContribution;" 
+                "uniform float Shininess;" 
+                "" 
+                "varying float LightIntensity;" 
+                "varying vec3  Position;" 
+                "" 
+                "void main(void)" 
+                "{" 
+                "    vec3 ecPosition = vec3 (gl_ModelViewMatrix * gl_Vertex);" 
+                "    vec3 tnorm      = normalize(gl_NormalMatrix * gl_Normal);" 
+                "    vec3 lightVec   = normalize(LightPosition - ecPosition);" 
+                "    vec3 reflectVec = reflect(-lightVec, tnorm);" 
+                "    vec3 viewVec    = normalize(-ecPosition);" 
+                "    float spec      = max(dot(reflectVec, viewVec), 0.0);" 
+                "    spec            = pow(spec, Shininess);" 
+                "    LightIntensity  = DiffuseContribution * " 
+                "                          max(dot(lightVec, tnorm), 0.0) +" 
+                "                          SpecularContribution * spec;" 
+                "    Position        = vec3(gl_MultiTexCoord0 - 0.5) * 5.0;" 
+                "    gl_Position     = ftransform();" 
+                "" 
+                "}" 
+              }
+            }
+            osg::Shader {
+              UniqueID 5 
+              DataVariance DYNAMIC 
+              Type FRAGMENT 
+              ShaderSource 54 {
+                "//" 
+                "// Fragment shader for drawing the Mandelbrot set" 
+                "//" 
+                "// Authors: Dave Baldwin, Steve Koren, Randi Rost" 
+                "//          based on a shader by Michael Rivero" 
+                "//" 
+                "// Copyright (c) 2002-2004: 3Dlabs, Inc." 
+                "//" 
+                "// See 3Dlabs-License.txt for license information" 
+                "//" 
+                "" 
+                "varying vec3  Position;" 
+                "varying float LightIntensity;" 
+                "" 
+                "uniform float MaxIterations;" 
+                "uniform float Zoom;" 
+                "uniform float Xcenter;" 
+                "uniform float Ycenter;" 
+                "uniform vec3  InnerColor;" 
+                "uniform vec3  OuterColor1;" 
+                "uniform vec3  OuterColor2;" 
+                "" 
+                "void main(void)" 
+                "{" 
+                "    float   real  = Position.x * Zoom + Xcenter;" 
+                "    float   imag  = Position.y * Zoom + Ycenter;" 
+                "    float   Creal = real;   // Change this line..." 
+                "    float   Cimag = imag;   // ...and this one to get a Julia set" 
+                "" 
+                "    float r2 = 0.0;" 
+                "    float iter;" 
+                "" 
+                "    for (iter = 0.0; iter < MaxIterations && r2 < 4.0; ++iter)" 
+                "    {" 
+                "        float tempreal = real;" 
+                "" 
+                "        real = (tempreal * tempreal) - (imag * imag) + Creal;" 
+                "        imag = 2.0 * tempreal * imag + Cimag;" 
+                "        r2   = (real * real) + (imag * imag);" 
+                "    }" 
+                "" 
+                "    // Base the color on the number of iterations" 
+                "" 
+                "    vec3 color;" 
+                "" 
+                "    if (r2 < 4.0)" 
+                "        color = InnerColor;" 
+                "    else" 
+                "        color = mix(OuterColor1, OuterColor2, fract(iter * 0.05));" 
+                "" 
+                "    color *= LightIntensity;" 
+                "" 
+                "    gl_FragColor = vec4 (color, 1.0);" 
+                "}" 
+              }
+            }
+          }
+          GeometryVerticesOut GL_GEOMETRY_VERTICES_OUT_EXT 1 
+          GeometryInputType GL_GEOMETRY_INPUT_TYPE_EXT 4 
+          GeometryOutputType GL_GEOMETRY_OUTPUT_TYPE_EXT 5 
+        }
+        Value OFF 
+      }
+      UniformList 11 {
+        osg::Uniform {
+          UniqueID 6 
+          Name "DiffuseContribution" 
+          DataVariance DYNAMIC 
+          Type FLOAT 
+          NumElements 1 
+          Elements TRUE ArrayID 1 FloatArray 1 {
+            0.8 
+          }
+        }
+        Value OFF 
+        osg::Uniform {
+          UniqueID 7 
+          Name "InnerColor" 
+          DataVariance DYNAMIC 
+          Type FLOAT_VEC3 
+          NumElements 1 
+          Elements TRUE ArrayID 2 FloatArray 3 {
+            0 0 0 
+          }
+        }
+        Value OFF 
+        osg::Uniform {
+          UniqueID 8 
+          Name "LightPosition" 
+          DataVariance DYNAMIC 
+          Type FLOAT_VEC3 
+          NumElements 1 
+          Elements TRUE ArrayID 3 FloatArray 3 {
+            0 0 1 
+          }
+        }
+        Value OFF 
+        osg::Uniform {
+          UniqueID 9 
+          Name "MaxIterations" 
+          DataVariance DYNAMIC 
+          Type FLOAT 
+          NumElements 1 
+          Elements TRUE ArrayID 4 FloatArray 1 {
+            100 
+          }
+        }
+        Value OFF 
+        osg::Uniform {
+          UniqueID 10 
+          Name "OuterColor1" 
+          DataVariance DYNAMIC 
+          Type FLOAT_VEC3 
+          NumElements 1 
+          Elements TRUE ArrayID 5 FloatArray 3 {
+            1 1 0 
+          }
+        }
+        Value OFF 
+        osg::Uniform {
+          UniqueID 11 
+          Name "OuterColor2" 
+          DataVariance DYNAMIC 
+          Type FLOAT_VEC3 
+          NumElements 1 
+          Elements TRUE ArrayID 6 FloatArray 3 {
+            0 0 1 
+          }
+        }
+        Value OFF 
+        osg::Uniform {
+          UniqueID 12 
+          Name "Shininess" 
+          DataVariance DYNAMIC 
+          Type FLOAT 
+          NumElements 1 
+          Elements TRUE ArrayID 7 FloatArray 1 {
+            0.3 
+          }
+        }
+        Value OFF 
+        osg::Uniform {
+          UniqueID 13 
+          Name "SpecularContribution" 
+          DataVariance DYNAMIC 
+          Type FLOAT 
+          NumElements 1 
+          Elements TRUE ArrayID 8 FloatArray 1 {
+            0.2 
+          }
+        }
+        Value OFF 
+        osg::Uniform {
+          UniqueID 14 
+          Name "Xcenter" 
+          DataVariance DYNAMIC 
+          Type FLOAT 
+          NumElements 1 
+          Elements TRUE ArrayID 9 FloatArray 1 {
+            -0.5 
+          }
+        }
+        Value OFF 
+        osg::Uniform {
+          UniqueID 15 
+          Name "Ycenter" 
+          DataVariance DYNAMIC 
+          Type FLOAT 
+          NumElements 1 
+          Elements TRUE ArrayID 10 FloatArray 1 {
+            0 
+          }
+        }
+        Value OFF 
+        osg::Uniform {
+          UniqueID 16 
+          Name "Zoom" 
+          DataVariance DYNAMIC 
+          Type FLOAT 
+          NumElements 1 
+          Elements TRUE ArrayID 11 FloatArray 1 {
+            0.6 
+          }
+        }
+        Value OFF 
+      }
+    }
+  }
+  Drawables 1 {
+    osg::Geometry {
+      UniqueID 17 
+      DataVariance DYNAMIC 
+      PrimitiveSetList 1 {
+        DrawArrays GL_QUADS 0 4 
+        
+      }
+      VertexData {
+        Array TRUE ArrayID 12 Vec3fArray 4 {
+          0 0 1 
+          0 0 0 
+          1 0 0 
+          1 0 1 
+        }
+        Indices FALSE 
+        Binding BIND_PER_VERTEX 
+        Normalize 0 
+      }
+      NormalData {
+        Array TRUE ArrayID 13 Vec3fArray 1 {
+          0 -1 0 
+        }
+        Indices FALSE 
+        Binding BIND_OVERALL 
+        Normalize 0 
+      }
+      ColorData {
+        Array TRUE ArrayID 14 Vec4fArray 1 {
+          1 1 1 1 
+        }
+        Indices FALSE 
+        Binding BIND_OVERALL 
+        Normalize 0 
+      }
+      TexCoordData 1 {
+        Data {
+          Array TRUE ArrayID 15 Vec2fArray 4 {
+            0 1 
+            0 0 
+            1 0 
+            1 1 
+          }
+          Indices FALSE 
+          Binding BIND_PER_VERTEX 
+          Normalize 0 
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,305 @@
+#Ascii Scene 
+#Version 78 
+#Generator OpenSceneGraph 2.9.17 
+
+osg::Group {
+  UniqueID 1 
+  Name "glsl_simple.osg" 
+  DataVariance DYNAMIC 
+  UpdateCallback TRUE {
+    osg::NodeCallback {
+      UniqueID 2 
+      DataVariance DYNAMIC 
+    }
+  }
+  StateSet TRUE {
+    osg::StateSet {
+      UniqueID 3 
+      DataVariance STATIC 
+      UniformList 3 {
+        osg::Uniform {
+          UniqueID 4 
+          Name "Color1" 
+          DataVariance DYNAMIC 
+          Type FLOAT_VEC3 
+          NumElements 1 
+          Elements TRUE ArrayID 1 FloatArray 3 {
+            0.5 1 1 
+          }
+        }
+        Value OFF 
+        osg::Uniform {
+          UniqueID 5 
+          Name "Color2" 
+          DataVariance DYNAMIC 
+          Type FLOAT_VEC3 
+          NumElements 1 
+          Elements TRUE ArrayID 2 FloatArray 3 {
+            1 0.5 0 
+          }
+        }
+        Value OFF 
+        osg::Uniform {
+          UniqueID 6 
+          Name "Sine" 
+          DataVariance DYNAMIC 
+          Type FLOAT 
+          NumElements 1 
+          Elements TRUE ArrayID 3 FloatArray 1 {
+            0.1 
+          }
+        }
+        Value OFF 
+      }
+    }
+  }
+  Children 2 {
+    osg::PositionAttitudeTransform {
+      UniqueID 7 
+      DataVariance DYNAMIC 
+      StateSet TRUE {
+        osg::StateSet {
+          UniqueID 8 
+          DataVariance STATIC 
+          AttributeList 1 {
+            osg::Program {
+              UniqueID 9 
+              DataVariance STATIC 
+              Shaders 2 {
+                osg::Shader {
+                  UniqueID 10 
+                  DataVariance DYNAMIC 
+                  Type VERTEX 
+                  ShaderSource 6 {
+                    "varying vec4 color;" 
+                    "void main(void)" 
+                    "{" 
+                    "    color = gl_Vertex;" 
+                    "    gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;" 
+                    "}" 
+                  }
+                }
+                osg::Shader {
+                  UniqueID 11 
+                  DataVariance DYNAMIC 
+                  Type FRAGMENT 
+                  ShaderSource 1 {
+                    "varying vec4 color;void main(void){gl_FragColor = clamp( color, 0.0, 1.0 );}" 
+                  }
+                }
+              }
+              GeometryVerticesOut GL_GEOMETRY_VERTICES_OUT_EXT 1 
+              GeometryInputType GL_GEOMETRY_INPUT_TYPE_EXT 4 
+              GeometryOutputType GL_GEOMETRY_OUTPUT_TYPE_EXT 5 
+            }
+            Value OFF 
+          }
+        }
+      }
+      Children 1 {
+        osg::Geode {
+          UniqueID 12 
+          DataVariance DYNAMIC 
+          Drawables 3 {
+            osg::ShapeDrawable {
+              UniqueID 13 
+              DataVariance DYNAMIC 
+              StateSet TRUE {
+                osg::StateSet {
+                  UniqueID 14 
+                  DataVariance STATIC 
+                  UniformList 1 {
+                    osg::Uniform {
+                      UniqueID 15 
+                      Name "Color1" 
+                      DataVariance DYNAMIC 
+                      Type FLOAT_VEC3 
+                      NumElements 1 
+                      Elements TRUE ArrayID 4 FloatArray 3 {
+                        0.2 0.8 1 
+                      }
+                    }
+                    Value OFF 
+                  }
+                }
+              }
+              Shape TRUE {
+                osg::Sphere {
+                  UniqueID 16 
+                  DataVariance DYNAMIC 
+                  Radius 1 
+                }
+              }
+              Color 1 1 1 1 
+            }
+            osg::ShapeDrawable {
+              UniqueID 17 
+              DataVariance DYNAMIC 
+              StateSet TRUE {
+                osg::StateSet {
+                  UniqueID 18 
+                  DataVariance STATIC 
+                  UniformList 1 {
+                    osg::Uniform {
+                      UniqueID 19 
+                      Name "Color1" 
+                      DataVariance DYNAMIC 
+                      Type FLOAT_VEC3 
+                      NumElements 1 
+                      Elements TRUE ArrayID 5 FloatArray 3 {
+                        0.9 0.2 0.2 
+                      }
+                    }
+                    Value OFF 
+                  }
+                }
+              }
+              Shape TRUE {
+                osg::Cone {
+                  UniqueID 20 
+                  DataVariance DYNAMIC 
+                  Center 2.2 0 -0.4 
+                  Radius 0.9 
+                  Height 1.8 
+                }
+              }
+              Color 1 1 1 1 
+            }
+            osg::ShapeDrawable {
+              UniqueID 21 
+              DataVariance DYNAMIC 
+              StateSet TRUE {
+                osg::StateSet {
+                  UniqueID 22 
+                  DataVariance STATIC 
+                  UniformList 1 {
+                    osg::Uniform {
+                      UniqueID 23 
+                      Name "Color1" 
+                      DataVariance DYNAMIC 
+                      Type FLOAT_VEC3 
+                      NumElements 1 
+                      Elements TRUE ArrayID 6 FloatArray 3 {
+                        0.2 0 0.8 
+                      }
+                    }
+                    Value OFF 
+                  }
+                }
+              }
+              Shape TRUE {
+                osg::Cylinder {
+                  UniqueID 24 
+                  DataVariance DYNAMIC 
+                  Center 4.4 0 0 
+                  Radius 1 
+                  Height 1.4 
+                }
+              }
+              Color 1 1 1 1 
+            }
+          }
+        }
+      }
+      Position 0 -1 0 
+      Scale 1 1 1 
+    }
+    osg::PositionAttitudeTransform {
+      UniqueID 25 
+      DataVariance DYNAMIC 
+      StateSet TRUE {
+        osg::StateSet {
+          UniqueID 26 
+          DataVariance STATIC 
+          AttributeList 1 {
+            osg::Program {
+              UniqueID 27 
+              DataVariance STATIC 
+              Shaders 2 {
+                osg::Shader {
+                  UniqueID 28 
+                  DataVariance DYNAMIC 
+                  Type FRAGMENT 
+                  ShaderSource 29 {
+                    "// blocky.frag - an OGLSL fragment shader with animation" 
+                    "// Mike Weiblen 2003-09-16 : derived from brick.frag" 
+                    "// Copyright 2003 3Dlabs Inc." 
+                    "// see http://www.3dlabs.com/opengl2/ for more OpenGL Shading Language info." 
+                    "// the App updates uniforms \"slowly\" (eg once per frame) for animation." 
+                    "uniform float Sine;" 
+                    "uniform vec3 Color1;" 
+                    "uniform vec3 Color2;" 
+                    "// varyings are written by vert shader, interpolated, and read by frag shader." 
+                    "varying vec2  BlockPosition;" 
+                    "varying float LightIntensity;" 
+                    "void main(void)" 
+                    "{" 
+                    "    vec3 color;" 
+                    "    float ss, tt, w, h;" 
+                    "    " 
+                    "    ss = BlockPosition.x;" 
+                    "    tt = BlockPosition.y;" 
+                    "    if (fract(tt * 0.5) > 0.5)" 
+                    "        ss += 0.5;" 
+                    "    ss = fract(ss);" 
+                    "    tt = fract(tt);" 
+                    "    // animate the proportion of block to mortar" 
+                    "    float blockFract = (Sine + 1.1) * 0.4;" 
+                    "    w = step(ss, blockFract);" 
+                    "    h = step(tt, blockFract);" 
+                    "    color = mix(Color2, Color1, w * h) * LightIntensity;" 
+                    "    gl_FragColor = vec4 (color, 1.0);" 
+                    "}" 
+                  }
+                }
+                osg::Shader {
+                  UniqueID 29 
+                  DataVariance DYNAMIC 
+                  Type VERTEX 
+                  ShaderSource 25 {
+                    "// blocky.vert - an OGLSL vertex shader with animation" 
+                    "// Mike Weiblen 2003-09-16 : derived from brick.vert" 
+                    "// Copyright 2003 3Dlabs Inc." 
+                    "// see http://www.3dlabs.com/opengl2/ for more OpenGL Shading Language info." 
+                    "// the App updates uniforms \"slowly\" (eg once per frame) for animation." 
+                    "uniform float Sine;" 
+                    "const vec3 LightPosition = vec3(0.0, 0.0, 4.0);" 
+                    "const float BlockScale = 0.30;" 
+                    "// varyings are written by vert shader, interpolated, and read by frag shader." 
+                    "varying float LightIntensity;" 
+                    "varying vec2  BlockPosition;" 
+                    "void main(void)" 
+                    "{" 
+                    "    // per-vertex diffuse lighting" 
+                    "    vec4 ecPosition	= gl_ModelViewMatrix * gl_Vertex;" 
+                    "    vec3 tnorm		= normalize(gl_NormalMatrix * gl_Normal);" 
+                    "    vec3 lightVec	= normalize(LightPosition - vec3 (ecPosition));" 
+                    "    LightIntensity	= max(dot(lightVec, tnorm), 0.0); " 
+                    "    // blocks will be determined by fragment's position on the XZ plane." 
+                    "    BlockPosition = gl_Vertex.xz / BlockScale;" 
+                    "    // scale the geometry based on an animation variable." 
+                    "    vec4 vertex	= gl_Vertex;" 
+                    "    vertex.w	= 1.0 + 0.4 * (Sine + 1.0);" 
+                    "    gl_Position	= gl_ModelViewProjectionMatrix * vertex;" 
+                    "}" 
+                  }
+                }
+              }
+              GeometryVerticesOut GL_GEOMETRY_VERTICES_OUT_EXT 1 
+              GeometryInputType GL_GEOMETRY_INPUT_TYPE_EXT 4 
+              GeometryOutputType GL_GEOMETRY_OUTPUT_TYPE_EXT 5 
+            }
+            Value OFF 
+          }
+        }
+      }
+      Children 1 {
+        osg::Geode {
+          UniqueID 12 
+        }
+      }
+      Position 0 -1 2.2 
+      Scale 1 1 1 
+    }
+  }
+}

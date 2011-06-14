@@ -1,0 +1,550 @@
+#Ascii Scene 
+#Version 78 
+#Generator OpenSceneGraph 2.9.17 
+
+osg::MatrixTransform {
+  UniqueID 1 
+  Name "Clock" 
+  DataVariance STATIC 
+  StateSet TRUE {
+    osg::StateSet {
+      UniqueID 2 
+      DataVariance STATIC 
+      ModeList 1 {
+        GL_LIGHTING ON 
+      }
+    }
+  }
+  Children 3 {
+    osg::Geode {
+      UniqueID 3 
+      Name "clockHouse" 
+      DataVariance STATIC 
+      Drawables 1 {
+        osg::Geometry {
+          UniqueID 4 
+          Name "clockHouse-geometry" 
+          DataVariance STATIC 
+          StateSet TRUE {
+            osg::StateSet {
+              UniqueID 5 
+              DataVariance STATIC 
+              ModeList 3 {
+                GL_CULL_FACE ON 
+                GL_LIGHTING ON 
+                GL_NORMALIZE OFF|OVERRIDE 
+              }
+              AttributeList 1 {
+                osg::Material {
+                  UniqueID 6 
+                  Ambient TRUE Front 0.588 0.588 0.588 1 Back 0.588 0.588 0.588 1 
+                  Diffuse TRUE Front 1 1 1 1 Back 1 1 1 1 
+                  Specular TRUE Front 0 0 0 1 Back 0 0 0 1 
+                  Emission TRUE Front 0 0 0 1 Back 0 0 0 1 
+                  Shininess TRUE Front 0 Back 0 
+                }
+                Value OFF 
+              }
+              TextureModeList 1 {
+                Data 1 {
+                  GL_TEXTURE_2D ON 
+                }
+              }
+              TextureAttributeList 1 {
+                Data 1 {
+                  osg::Texture2D {
+                    UniqueID 7 
+                    WRAP_S REPEAT 
+                    WRAP_T REPEAT 
+                    WRAP_R CLAMP_TO_EDGE 
+                    MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                    MAG_FILTER LINEAR 
+                    UnRefImageDataAfterApply TRUE 
+                    ResizeNonPowerOfTwoHint TRUE 
+                    InternalFormatMode USE_S3TC_DXT1_COMPRESSION 
+                    Image TRUE {
+                      UniqueID 8 
+                      FileName "Images/clockface.JPG" 
+                      WriteHint 0 2 
+                      DataVariance STATIC 
+                    }
+                  }
+                  Value OFF 
+                }
+              }
+            }
+          }
+          PrimitiveSetList 6 {
+            DrawElementsUShort GL_TRIANGLE_STRIP 4 {
+              1 2 0 3 
+            }
+            DrawElementsUShort GL_TRIANGLE_STRIP 4 {
+              7 4 6 5 
+            }
+            DrawElementsUShort GL_TRIANGLE_STRIP 4 {
+              23 20 22 21 
+            }
+            DrawElementsUShort GL_TRIANGLE_STRIP 4 {
+              19 16 18 17 
+            }
+            DrawElementsUShort GL_TRIANGLE_STRIP 4 {
+              13 14 12 15 
+            }
+            DrawElementsUShort GL_TRIANGLE_STRIP 4 {
+              9 10 8 11 
+            }
+            
+          }
+          VertexData {
+            Array TRUE ArrayID 1 Vec3fArray 24 {
+              -0.5 -0.05 0 
+              -0.5 0.05 0 
+              0.5 0.05 0 
+              0.5 -0.05 0 
+              -0.5 -0.05 1 
+              0.5 -0.05 1 
+              0.5 0.05 1 
+              -0.5 0.05 1 
+              -0.5 -0.05 0 
+              0.5 -0.05 0 
+              0.5 -0.05 1 
+              -0.5 -0.05 1 
+              0.5 -0.05 0 
+              0.5 0.05 0 
+              0.5 0.05 1 
+              0.5 -0.05 1 
+              0.5 0.05 0 
+              -0.5 0.05 0 
+              -0.5 0.05 1 
+              0.5 0.05 1 
+              -0.5 0.05 0 
+              -0.5 -0.05 0 
+              -0.5 -0.05 1 
+              -0.5 0.05 1 
+            }
+            Indices FALSE 
+            Binding BIND_PER_VERTEX 
+            Normalize 0 
+          }
+          NormalData {
+            Array TRUE ArrayID 2 Vec3fArray 24 {
+              0 0 -1 
+              0 0 -1 
+              0 0 -1 
+              0 0 -1 
+              0 0 1 
+              0 0 1 
+              0 0 1 
+              0 0 1 
+              0 -1 0 
+              0 -1 0 
+              0 -1 0 
+              0 -1 0 
+              1 0 0 
+              1 0 0 
+              1 0 0 
+              1 0 0 
+              0 1 0 
+              0 1 0 
+              0 1 0 
+              0 1 0 
+              -1 0 0 
+              -1 0 0 
+              -1 0 0 
+              -1 0 0 
+            }
+            Indices FALSE 
+            Binding BIND_PER_VERTEX 
+            Normalize 0 
+          }
+          TexCoordData 1 {
+            Data {
+              Array TRUE ArrayID 3 Vec2fArray 24 {
+                1 0 
+                1 1 
+                0 1 
+                0 0 
+                0 0 
+                1 0 
+                1 1 
+                0 1 
+                0 0 
+                1 0 
+                1 1 
+                0 1 
+                0 0 
+                1 0 
+                1 1 
+                0 1 
+                0 0 
+                1 0 
+                1 1 
+                0 1 
+                0 0 
+                1 0 
+                1 1 
+                0 1 
+              }
+              Indices FALSE 
+              Binding BIND_PER_VERTEX 
+              Normalize 0 
+            }
+          }
+        }
+      }
+    }
+    osg::Group {
+      UniqueID 9 
+      DataVariance STATIC 
+      Children 3 {
+        osg::MatrixTransform {
+          UniqueID 10 
+          Name "hours" 
+          DataVariance DYNAMIC 
+          UpdateCallback TRUE {
+            osg::AnimationPathCallback {
+              UniqueID 11 
+              DataVariance DYNAMIC 
+              AnimationPath TRUE {
+                osg::AnimationPath {
+                  UniqueID 12 
+                  DataVariance DYNAMIC 
+                  TimeControlPointMap 3 {
+                    Time 0 {
+                      Position 0 0 0.5 
+                      Rotation 0 -0.707107 -0.707107 0 
+                      Scale 1 1 1 
+                    }
+                    Time 21600 {
+                      Position 0 0 0.5 
+                      Rotation -0.707107 0 0 0.707107 
+                      Scale 1 1 1 
+                    }
+                    Time 43200 {
+                      Position 0 0 0.5 
+                      Rotation 0 0.707107 0.707107 0 
+                      Scale 1 1 1 
+                    }
+                  }
+                }
+              }
+            }
+          }
+          Children 1 {
+            osg::Geode {
+              UniqueID 13 
+              Name "hours-GEODE" 
+              DataVariance STATIC 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 14 
+                  Name "hours-Geometry" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 15 
+                      DataVariance STATIC 
+                      ModeList 3 {
+                        GL_CULL_FACE ON 
+                        GL_LIGHTING ON 
+                        GL_NORMALIZE OFF|OVERRIDE 
+                      }
+                      AttributeList 1 {
+                        osg::Material {
+                          UniqueID 6 
+                        }
+                        Value OFF 
+                      }
+                      TextureModeList 1 {
+                        Data 1 {
+                          GL_TEXTURE_2D ON 
+                        }
+                      }
+                      TextureAttributeList 1 {
+                        Data 1 {
+                          osg::Texture2D {
+                            UniqueID 16 
+                            WRAP_S REPEAT 
+                            WRAP_T REPEAT 
+                            WRAP_R CLAMP_TO_EDGE 
+                            MIN_FILTER LINEAR_MIPMAP_LINEAR 
+                            MAG_FILTER LINEAR 
+                            UnRefImageDataAfterApply TRUE 
+                            ResizeNonPowerOfTwoHint TRUE 
+                            InternalFormatMode USE_S3TC_DXT1_COMPRESSION 
+                            Image TRUE {
+                              UniqueID 17 
+                              FileName "Images/osg64.png" 
+                              WriteHint 0 2 
+                              DataVariance STATIC 
+                            }
+                          }
+                          Value OFF 
+                        }
+                      }
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_TRIANGLES 0 3 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 4 Vec3fArray 3 {
+                      0.02 -0.01 -0.051 
+                      -0.02 -0.01 -0.051 
+                      0 0.295 -0.051 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 5 Vec3fArray 3 {
+                      0 0 -1 
+                      0 0 -1 
+                      0 0 -1 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 6 Vec2fArray 3 {
+                        0.5 0.95 
+                        0.5 0.95 
+                        0.5 0.95 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+          }
+          Matrix {
+            1 0 0 0 
+            0 1 0 0 
+            0 0 1 0 
+            0 0 0.5 1 
+          }
+          
+        }
+        osg::MatrixTransform {
+          UniqueID 18 
+          Name "Minutes" 
+          DataVariance DYNAMIC 
+          UpdateCallback TRUE {
+            osg::AnimationPathCallback {
+              UniqueID 19 
+              DataVariance DYNAMIC 
+              AnimationPath TRUE {
+                osg::AnimationPath {
+                  UniqueID 20 
+                  DataVariance DYNAMIC 
+                  TimeControlPointMap 3 {
+                    Time 0 {
+                      Position 0 0 0.5 
+                      Rotation 0 -0.707107 -0.707107 0 
+                      Scale 1 1 1 
+                    }
+                    Time 1800 {
+                      Position 0 0 0.5 
+                      Rotation -0.707107 0 0 0.707107 
+                      Scale 1 1 1 
+                    }
+                    Time 3600 {
+                      Position 0 0 0.5 
+                      Rotation 0 0.707107 0.707107 0 
+                      Scale 1 1 1 
+                    }
+                  }
+                }
+              }
+            }
+          }
+          NodeMask ff 
+          Children 1 {
+            osg::Geode {
+              UniqueID 21 
+              Name "Minutes-GEODE" 
+              DataVariance STATIC 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 22 
+                  Name "Minutes-Geometry" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 15 
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_TRIANGLES 0 3 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 7 Vec3fArray 3 {
+                      0.017 -0.01 -0.052 
+                      -0.017 -0.01 -0.052 
+                      0 0.45 -0.052 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 8 Vec3fArray 3 {
+                      0 0 -1 
+                      0 0 -1 
+                      0 0 -1 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 9 Vec2fArray 3 {
+                        0.195312 0.195312 
+                        0.195312 0.195312 
+                        0.195312 0.195312 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+          }
+          Matrix {
+            1 0 0 0 
+            0 1 0 0 
+            0 0 1 0 
+            0 0 0.5 1 
+          }
+          
+        }
+        osg::MatrixTransform {
+          UniqueID 23 
+          Name "Seconds" 
+          DataVariance DYNAMIC 
+          UpdateCallback TRUE {
+            osg::AnimationPathCallback {
+              UniqueID 24 
+              DataVariance DYNAMIC 
+              AnimationPath TRUE {
+                osg::AnimationPath {
+                  UniqueID 25 
+                  DataVariance DYNAMIC 
+                  TimeControlPointMap 3 {
+                    Time 0 {
+                      Position 0 0 0.5 
+                      Rotation 0 -0.707107 -0.707107 0 
+                      Scale 1 1 1 
+                    }
+                    Time 30 {
+                      Position 0 0 0.5 
+                      Rotation -0.707107 0 0 0.707107 
+                      Scale 1 1 1 
+                    }
+                    Time 60 {
+                      Position 0 0 0.5 
+                      Rotation 0 0.707107 0.707107 0 
+                      Scale 1 1 1 
+                    }
+                  }
+                }
+              }
+            }
+          }
+          NodeMask ff 
+          Children 1 {
+            osg::Geode {
+              UniqueID 26 
+              Name "Seconds-GEODE" 
+              DataVariance STATIC 
+              Drawables 1 {
+                osg::Geometry {
+                  UniqueID 27 
+                  Name "Seconds-Geometry" 
+                  DataVariance STATIC 
+                  StateSet TRUE {
+                    osg::StateSet {
+                      UniqueID 15 
+                    }
+                  }
+                  PrimitiveSetList 1 {
+                    DrawArrays GL_TRIANGLES 0 3 
+                    
+                  }
+                  VertexData {
+                    Array TRUE ArrayID 10 Vec3fArray 3 {
+                      0.01 -0.01 -0.054 
+                      -0.01 -0.01 -0.054 
+                      0 0.47 -0.054 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  NormalData {
+                    Array TRUE ArrayID 11 Vec3fArray 3 {
+                      0 0 -1 
+                      0 0 -1 
+                      0 0 -1 
+                    }
+                    Indices FALSE 
+                    Binding BIND_PER_VERTEX 
+                    Normalize 0 
+                  }
+                  TexCoordData 1 {
+                    Data {
+                      Array TRUE ArrayID 12 Vec2fArray 3 {
+                        0.804788 0.195312 
+                        0.804788 0.195312 
+                        0.804788 0.195312 
+                      }
+                      Indices FALSE 
+                      Binding BIND_PER_VERTEX 
+                      Normalize 0 
+                    }
+                  }
+                }
+              }
+            }
+          }
+          Matrix {
+            1 0 0 0 
+            0 1 0 0 
+            0 0 1 0 
+            0 0 0.5 1 
+          }
+          
+        }
+      }
+    }
+    osg::MatrixTransform {
+      UniqueID 28 
+      Name "BackClockFace" 
+      DataVariance DYNAMIC 
+      NodeMask ff 
+      Children 1 {
+        osg::Group {
+          UniqueID 9 
+        }
+      }
+      Matrix {
+        -1 0 0 0 
+        0 -1 0 0 
+        0 0 1 0 
+        0 0 0 1 
+      }
+      
+    }
+  }
+}
