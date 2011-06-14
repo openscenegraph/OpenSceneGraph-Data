@@ -1,0 +1,204 @@
+#Ascii Scene 
+#Version 78 
+#Generator OpenSceneGraph 2.9.17 
+
+osg::Group {
+  UniqueID 1 
+  Name "SmokeBox.osg" 
+  DataVariance DYNAMIC 
+  Children 4 {
+    osg::Geode {
+      UniqueID 2 
+      Name "Layer 0" 
+      DataVariance DYNAMIC 
+      Drawables 1 {
+        osgParticle::ParticleSystem {
+          UniqueID 3 
+          DataVariance DYNAMIC 
+          StateSet TRUE {
+            osg::StateSet {
+              UniqueID 4 
+              DataVariance STATIC 
+              ModeList 2 {
+                GL_LIGHTING OFF 
+                GL_BLEND ON 
+              }
+              AttributeList 2 {
+                osg::Material {
+                  UniqueID 5 
+                  DataVariance STATIC 
+                  Ambient TRUE Front 0.2 0.2 0.2 1 Back 0.2 0.2 0.2 1 
+                  Diffuse TRUE Front 0.8 0.8 0.8 1 Back 0.8 0.8 0.8 1 
+                  Specular FALSE Front 0 0 0 1 Back 0 0 0 1 
+                  Emission FALSE Front 0 0 0 1 Back 0 0 0 1 
+                  Shininess TRUE Front 0 Back 0 
+                }
+                Value OFF 
+                osg::BlendFunc {
+                  UniqueID 6 
+                  DataVariance STATIC 
+                  SourceRGB SRC_ALPHA 
+                  SourceAlpha SRC_ALPHA 
+                  DestinationRGB ONE_MINUS_SRC_ALPHA 
+                  DestinationAlpha ONE_MINUS_SRC_ALPHA 
+                }
+                Value OFF 
+              }
+              TextureModeList 1 {
+                Data 1 {
+                  GL_TEXTURE_2D ON 
+                }
+              }
+              TextureAttributeList 1 {
+                Data 2 {
+                  osg::Texture2D {
+                    UniqueID 7 
+                    DataVariance STATIC 
+                    WRAP_S REPEAT 
+                    WRAP_T REPEAT 
+                    WRAP_R REPEAT 
+                    MIN_FILTER LINEAR 
+                    MAG_FILTER LINEAR 
+                    UnRefImageDataAfterApply TRUE 
+                    Image TRUE {
+                      UniqueID 8 
+                      FileName "Images/smoke.rgb" 
+                      WriteHint 0 2 
+                      DataVariance STATIC 
+                    }
+                  }
+                  Value OFF 
+                  osg::TexEnv {
+                    UniqueID 9 
+                    DataVariance STATIC 
+                  }
+                  Value OFF 
+                }
+              }
+              RenderingHint 2 
+              RenderBinMode USE_RENDERBIN_DETAILS 
+              BinNumber 13 
+              BinName "DepthSortedBin" 
+            }
+          }
+          SupportsDisplayList FALSE 
+          UseDisplayList FALSE 
+          DefaultBoundingBox {
+            Minimum -10 -10 -10 
+            Maximum 10 10 10 
+          }
+          AlignVectorX 1 0 0 
+          AlignVectorY 0 1 0 
+          DefaultParticleTemplate {
+            Shape QUAD 
+            LifeTime 20 
+            SizeRange 0 4 
+            AlphaRange 1 0 
+            ColorRange 0 0 0 1 0 0 0 1 
+            SizeInterpolator TRUE {
+              osgParticle::LinearInterpolator {
+                UniqueID 10 
+                DataVariance DYNAMIC 
+              }
+            }
+            AlphaInterpolator TRUE {
+              osgParticle::LinearInterpolator {
+                UniqueID 11 
+                DataVariance DYNAMIC 
+              }
+            }
+            ColorInterpolator TRUE {
+              osgParticle::LinearInterpolator {
+                UniqueID 12 
+                DataVariance DYNAMIC 
+              }
+            }
+            Radius 0.2 
+            Mass 0.1 
+            Position 0 0 0 
+            Velocity 0 0 0 
+            Angle 0 0 0 
+            AngularVelocity 0 0 0 
+            TextureTile 1 1 1 
+            Drawable FALSE 
+          }
+        }
+      }
+    }
+    osg::MatrixTransform {
+      UniqueID 13 
+      DataVariance DYNAMIC 
+      Children 1 {
+        osgParticle::ModularEmitter {
+          UniqueID 14 
+          DataVariance DYNAMIC 
+          CullingActive FALSE 
+          ReferenceFrame ABSOLUTE_RF 
+          ParticleSystem TRUE {
+            osgParticle::ParticleSystem {
+              UniqueID 3 
+            }
+          }
+          Counter TRUE {
+            osgParticle::RandomRateCounter {
+              UniqueID 15 
+              DataVariance DYNAMIC 
+              RateRange 10 10 
+            }
+          }
+          Placer TRUE {
+            osgParticle::BoxPlacer {
+              UniqueID 16 
+              DataVariance DYNAMIC 
+              XRange -10 10 
+              YRange -5 5 
+              ZRange -3 3 
+            }
+          }
+          Shooter TRUE {
+            osgParticle::RadialShooter {
+              UniqueID 17 
+              DataVariance DYNAMIC 
+              ThetaRange -0.392699 0.39 
+              PhiRange 0 6.2832 
+              InitialSpeedRange 0 0 
+              InitialRotationalSpeedRange 0 0 -1 0 0 1 
+            }
+          }
+        }
+      }
+    }
+    osgParticle::ModularProgram {
+      UniqueID 18 
+      DataVariance DYNAMIC 
+      CullingActive FALSE 
+      ParticleSystem TRUE {
+        osgParticle::ParticleSystem {
+          UniqueID 3 
+        }
+      }
+      Operators 2 {
+        osgParticle::FluidFrictionOperator {
+          UniqueID 19 
+          DataVariance DYNAMIC 
+          FluidDensity 0.108 
+          FluidDensity 0.108 
+        }
+        osgParticle::ForceOperator {
+          UniqueID 20 
+          DataVariance DYNAMIC 
+        }
+      }
+    }
+    osgParticle::ParticleSystemUpdater {
+      UniqueID 21 
+      DataVariance DYNAMIC 
+      CullingActive FALSE 
+      ParticleSystems 1 {
+        osgParticle::ParticleSystem {
+          UniqueID 3 
+        }
+      }
+    }
+  }
+}
