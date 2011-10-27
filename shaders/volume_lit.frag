@@ -5,6 +5,7 @@ uniform float AlphaFuncValue;
 
 varying vec4 cameraPos;
 varying vec4 vertexPos;
+varying vec3 lightDirection;
 varying mat4 texgen;
 
 void main(void)
@@ -60,8 +61,6 @@ void main(void)
     t0 = t0 * texgen;
     te = te * texgen;
 
-    vec3 eyeDirection = normalize((te-t0).xyz);
-
     const float max_iteratrions = 2048.0;
     float num_iterations = ceil(length((te-t0).xyz)/SampleDensityValue);
     if (num_iterations<2.0) num_iterations = 2.0;
@@ -97,7 +96,7 @@ void main(void)
         if (grad.x!=0.0 || grad.y!=0.0 || grad.z!=0.0)
         {
             vec3 normal = normalize(grad);
-            float lightScale = 0.1 +  abs(dot(normal.xyz, eyeDirection))*0.9;
+            float lightScale = 0.1 +  max(0.0, dot(normal.xyz, lightDirection))*0.9;
 
             color.x *= lightScale;
             color.y *= lightScale;

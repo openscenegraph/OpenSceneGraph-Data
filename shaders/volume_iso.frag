@@ -12,9 +12,6 @@ void main(void)
 { 
     vec4 t0 = vertexPos;
     vec4 te = cameraPos;
-    // vec3 eyeDirection = normalize((te-t0).xyz);
-    // vec3 lightDirection = eyeDirection;
-    //vec3 lightDirection = vec3(0.0,0.0,1.0);
 
     if (te.x>=0.0 && te.x<=1.0 &&
         te.y>=0.0 && te.y<=1.0 &&
