@@ -5,13 +5,16 @@ uniform float IsoSurfaceValue;
 
 varying vec4 cameraPos;
 varying vec4 vertexPos;
+varying vec3 lightDirection;
 varying mat4 texgen;
 
 void main(void)
 { 
     vec4 t0 = vertexPos;
     vec4 te = cameraPos;
-    vec3 eyeDirection = normalize((te-t0).xyz);
+    // vec3 eyeDirection = normalize((te-t0).xyz);
+    // vec3 lightDirection = eyeDirection;
+    //vec3 lightDirection = vec3(0.0,0.0,1.0);
 
     if (te.x>=0.0 && te.x<=1.0 &&
         te.y>=0.0 && te.y<=1.0 &&
@@ -103,12 +106,13 @@ void main(void)
             if (grad.x!=0.0 || grad.y!=0.0 || grad.z!=0.0)
             {
                 vec3 normal = normalize(grad);
-                float lightScale = 0.1 +  abs(dot(normal.xyz, eyeDirection))*0.9;
+                float lightScale = 0.1 +  max(0.0, dot(normal.xyz, lightDirection))*0.9;
 
                 color.x = lightScale;
                 color.y = lightScale;
                 color.z = lightScale;
             }
+
 
             color.a = 1.0;
 
