@@ -3,7 +3,7 @@ varying vec4 cameraPos;
 varying vec4 vertexPos;
 varying vec3 lightDirection;
 varying mat4 texgen;
-
+varying vec4 baseColor;
 
 void main(void)
 {
@@ -11,6 +11,7 @@ void main(void)
 
         cameraPos = gl_ModelViewMatrixInverse * vec4(0,0,0,1);
         vertexPos = gl_Vertex;
+        baseColor = gl_FrontMaterial.diffuse;
 
         vec4 lightPosition = gl_ModelViewMatrixInverse * gl_LightSource[0].position;
         if (lightPosition[3]==0.0)

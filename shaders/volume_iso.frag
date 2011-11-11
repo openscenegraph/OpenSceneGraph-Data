@@ -7,6 +7,7 @@ varying vec4 cameraPos;
 varying vec4 vertexPos;
 varying vec3 lightDirection;
 varying mat4 texgen;
+varying vec4 baseColor;
 
 void main(void)
 { 
@@ -112,6 +113,8 @@ void main(void)
 
 
             color.a = 1.0;
+
+            color *= baseColor;
 
             gl_FragColor = color;
             
