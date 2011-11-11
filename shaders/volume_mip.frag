@@ -6,6 +6,7 @@ uniform float AlphaFuncValue;
 varying vec4 cameraPos;
 varying vec4 vertexPos;
 varying mat4 texgen;
+varying vec4 baseColor;
 
 void main(void)
 { 
@@ -86,8 +87,10 @@ void main(void)
     }
 
     fragColor.w *= TransparencyValue;
-
     if (fragColor.w>1.0) fragColor.w = 1.0; 
+
+    fragColor *= baseColor;
+
     if (fragColor.w<AlphaFuncValue) discard;
     
     gl_FragColor = fragColor;
