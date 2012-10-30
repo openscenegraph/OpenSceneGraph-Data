@@ -1,0 +1,54 @@
+<html>
+<head>
+    <title>test</title>
+    <script src="javascripts/jquery-1.8.2.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <link rel="stylesheet" media="screen" href="stylesheets/style.css" />
+  
+</head>
+<body>
+    <h1>Present3D specific:</h1>
+    <ul>
+        <li>
+            <a href="/slide/first" class="ajax">first slide</a>
+        </li>
+        <li>
+            <a href="/slide/last" class="ajax">last slide</a>
+        </li>
+        <li>
+            <a href="/slide/previous" class="ajax">previous slide</a>
+        </li>
+        <li>
+            <a href="/slide/next"  class="ajax">next slide</a>
+        </li>
+        <li>
+            <a href="/layer/previous" class="ajax">previous layer</a>
+        </li>
+        <li>
+            <a href="/layer/next"  class="ajax">next layer</a>
+        </li>
+        <li>
+            <a href="/slideorlayer/previous" class="ajax">previous layer/slide</a>
+        </li>
+        <li>
+            <a href="/slideorlayer/next"  class="ajax">next layer/slide</a>
+        </li>
+        <li>
+            <a href="/pause" class="ajax">pause</a>
+        </li>
+        <li>
+            <a href="/unpause"  class="ajax">unpause</a>
+        </li>
+        <li>
+            <a href="/home"  class="ajax">home</a>
+        </li>
+    </ul>
+    <h1>Raw events: </h1>
+    <ul>
+        <li>
+            Keycode: <input type="text" id="keycode" value="" /><a href="/key/press"  class="keycode">key press</a><a href="/key/release"  class="keycode">key release</a>
+        </li>
+        <li><a href="/mouse/set_input_range" class="set-mouse-input-range">set mouse input range</a>
+    </ul>
+    <div style="width: 640px; height: 480px; background-color: #eee;" id="mouse-input"></div
+</body>
