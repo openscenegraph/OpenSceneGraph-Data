@@ -1,0 +1,9 @@
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    padding:15px;
+}
+
+a {
+    @include sassy-button("simple", 5px, 12px, #aaa, #bbb);
+    text-decoration: none;
+}
