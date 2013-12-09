@@ -2,6 +2,7 @@
 
 uniform vec2 viewportSize;
 uniform sampler3D volumeTexture;
+uniform vec3 volumeCellSize;
 uniform float SampleDensityValue;
 uniform float TransparencyValue;
 uniform float AlphaFuncValue;
@@ -19,20 +20,71 @@ varying vec4 baseColor;
 
 vec4 accumulateSamples(vec3 ts, vec3 te)
 {
-    const float max_iteratrions = 2048.0;
-    float num_iterations = ceil(length((te-ts).xyz)/SampleDensityValue);
-    if (num_iterations<2.0) num_iterations = 2.0;
+#if 1
+    const int max_iterations = 8192;
+#else
+    const int max_iterations = 2048;//8192;
+#endif
 
-    if (num_iterations>max_iteratrions)
+    float sampleRatio = SampleDensityValue/0.0005;
+    //sampleRatio = 1.0;
+
+    vec3 volumeCellSize = vec3(1.0/512.0,1.0/512.0,1.0/512.0);
+    float density = length(volumeCellSize)*0.5/sampleRatio;
+
+    int num_iterations = int(ceil(length((te-ts).xyz)/density));
+
+    vec4 baseColor = vec4(1.0,1.0,1.0,1.0);
+
+    // clamp to 2 to max_iterations range.
+    if (num_iterations<2) num_iterations = 2;
+    if (num_iterations>max_iterations)
     {
-        num_iterations = max_iteratrions;
+        num_iterations = max_iterations;
+        baseColor.r = 0.0;
     }
 
-    vec3 deltaTexCoord=(te-ts).xyz/float(num_iterations-1.0);
+#if 1
+    // traverse from front to back
+    vec3 deltaTexCoord=(ts-te).xyz/float(num_iterations-1);
+    vec3 texcoord = te.xyz;
+    float stepLength = length(deltaTexCoord);
+
+    vec4 fragColor = vec4(0.0, 0.0, 0.0, 0.0);
+
+    //float scale = 0.5/sampleRatio;
+    float scale = stepLength/length(volumeCellSize);
+    if (scale>1.0) scale = 1.0;
+
+    scale *= TransparencyValue;
+
+    float cutoff = 0.999;
+    while(num_iterations>0 && fragColor.a<cutoff)
+    {
+        vec4 color = texture3D( volumeTexture, texcoord);
+
+        if (color.a>AlphaFuncValue)
+        {
+            float r = color.a * ((1.0-fragColor.a)*scale);
+            fragColor.rgb += color.rgb*r;
+            fragColor.a += r;
+        }
+
+        texcoord += deltaTexCoord;
+
+        --num_iterations;
+    }
+
+    fragColor *= baseColor;
+
+
+#else
+    // traverse from back to front
+    vec3 deltaTexCoord=(te-ts).xyz/float(num_iterations-1);
     vec3 texcoord = ts.xyz;
 
     vec4 fragColor = vec4(0.0, 0.0, 0.0, 0.0);
-    while(num_iterations>0.0)
+    while(num_iterations>0)
     {
         vec4 color = texture3D( volumeTexture, texcoord);
         float r = color[3]*TransparencyValue;
@@ -50,9 +102,9 @@ vec4 accumulateSamples(vec3 ts, vec3 te)
 
         --num_iterations;
     }
-
     fragColor.w *= TransparencyValue;
     if (fragColor.w>1.0) fragColor.w = 1.0;
+#endif
 
     return fragColor;
 }
