@@ -3,7 +3,7 @@
 uniform vec2 viewportSize;
 uniform sampler3D volumeTexture;
 uniform vec3 volumeCellSize;
-uniform float SampleDensityValue;
+uniform float SampleRatioValue;
 uniform float TransparencyValue;
 uniform float AlphaFuncValue;
 
@@ -26,11 +26,14 @@ vec4 accumulateSamples(vec3 ts, vec3 te)
     const int max_iterations = 2048;//8192;
 #endif
 
-    float sampleRatio = SampleDensityValue/0.0005;
-    //sampleRatio = 1.0;
-
-    vec3 volumeCellSize = vec3(1.0/512.0,1.0/512.0,1.0/512.0);
-    float density = length(volumeCellSize)*0.5/sampleRatio;
+#if 1
+    float density = volumeCellSize.x;
+    if (volumeCellSize.y<density) density = volumeCellSize.y;
+    if (volumeCellSize.z<density) density = volumeCellSize.z;
+    density /= SampleRatioValue;
+#else
+    float density = length(volumeCellSize)*0.5/SampleRatioValue;
+#endif
 
     int num_iterations = int(ceil(length((te-ts).xyz)/density));
 
@@ -74,6 +77,8 @@ vec4 accumulateSamples(vec3 ts, vec3 te)
 
         --num_iterations;
     }
+
+    if (num_iterations>0) fragColor.a = 1.0;
 
     fragColor *= baseColor;
 
@@ -181,10 +186,12 @@ vec4 computeRayColor(float px, float py, float depth_start, float depth_end)
     end_object.w = 1.0;
 
     // need to clamp object coords to unit cube?
+    vec4 clamped_start_object = vec4(clampToUnitCube(end_object.xyz, start_object.xyz),1.0);
+    vec4 clamped_end_object = vec4(clampToUnitCube(start_object.xyz, end_object.xyz),1.0);
 
     // start and end in texture coords
-    vec4 start_texcoord = start_object * texgen;
-    vec4 end_texcoord = end_object * texgen;
+    vec4 start_texcoord = clamped_start_object * texgen;
+    vec4 end_texcoord = clamped_end_object * texgen;
 
     vec3 clamped_start_texcoord = clampToUnitCube(end_texcoord.xyz, start_texcoord.xyz);
     vec3 clamped_end_texcoord = clampToUnitCube(start_texcoord.xyz, end_texcoord.xyz);
