@@ -2,14 +2,14 @@
 
 uniform sampler2D colorTexture;
 uniform sampler2D depthTexture;
-uniform vec2 viewportSize;
+uniform vec4 viewportDimensions;
 
 // declare function defined in volume_compute_ray_color.frag
 vec4 computeRayColor(float px, float py, float depth_start, float depth_end);
 
 void main(void)
 {
-    vec2 texcoord = vec2(gl_FragCoord.x / viewportSize.x, gl_FragCoord.y / viewportSize.y);
+    vec2 texcoord = vec2((gl_FragCoord.x-viewportDimensions[0])/viewportDimensions[2], (gl_FragCoord.y-viewportDimensions[1])/viewportDimensions[3]);
     vec4 color = texture2D( colorTexture, texcoord);
     float texture_depth = texture2D( depthTexture, texcoord).s;
 

@@ -1,6 +1,6 @@
 #version 110
 
-uniform vec2 viewportSize;
+uniform vec4 viewportDimensions;
 uniform sampler3D volumeTexture;
 uniform vec3 volumeCellSize;
 uniform float SampleRatioValue;
@@ -26,16 +26,23 @@ vec4 accumulateSamples(vec3 ts, vec3 te)
     const int max_iterations = 2048;//8192;
 #endif
 
-#if 1
+#if 0
+    vec3 delta = abs(te-ts);
+    vec3 cell_samples = vec3(ceil(delta.x/volumeCellSize.x), ceil(delta.y/volumeCellSize.y), ceil(delta.z/volumeCellSize.z));
+    float iterations = cell_samples.x;
+    if (iterations<cell_samples.y) iterations = cell_samples.y;
+    if (iterations<cell_samples.z) iterations = cell_samples.z;
+
+    int num_iterations = int(ceil(2.0*iterations * SampleRatioValue));
+#else
     float density = volumeCellSize.x;
     if (volumeCellSize.y<density) density = volumeCellSize.y;
     if (volumeCellSize.z<density) density = volumeCellSize.z;
     density /= SampleRatioValue;
-#else
-    float density = length(volumeCellSize)*0.5/SampleRatioValue;
-#endif
 
     int num_iterations = int(ceil(length((te-ts).xyz)/density));
+#endif
+
 
     vec4 baseColor = vec4(1.0,1.0,1.0,1.0);
 
@@ -61,7 +68,7 @@ vec4 accumulateSamples(vec3 ts, vec3 te)
 
     scale *= TransparencyValue;
 
-    float cutoff = 0.999;
+    float cutoff = 1.0-1.0/256.0;
     while(num_iterations>0 && fragColor.a<cutoff)
     {
         vec4 color = texture3D( volumeTexture, texcoord);
@@ -81,7 +88,6 @@ vec4 accumulateSamples(vec3 ts, vec3 te)
     if (num_iterations>0) fragColor.a = 1.0;
 
     fragColor *= baseColor;
-
 
 #else
     // traverse from back to front
@@ -167,13 +173,15 @@ vec3 clampToUnitCube(vec3 ts, vec3 te)
 
 vec4 computeRayColor(float px, float py, float depth_start, float depth_end)
 {
-    // float world_depth_texture = near_mult_far / (far - texture_depth*far_sub_near);
-    // float world_depth_fragment = near_mult_far / (far - gl_FragCoord.z*far_sub_near);
-    vec3 texcoord = vec3(px/viewportSize.x,py/viewportSize.y, depth_start);
+    float viewportWidth = viewportDimensions[2];
+    float viewportHeight = viewportDimensions[3];
+
+    px -= viewportDimensions.x;
+    py -= viewportDimensions.y;
 
     // start and end clip space coords
-    vec4 start_clip = vec4((px/viewportSize.x)*2.0-1.0, (py/viewportSize.y)*2.0-1.0, (depth_start)*2.0-1.0, 1.0);
-    vec4 end_clip = vec4((px/viewportSize.x)*2.0-1.0, (py/viewportSize.y)*2.0-1.0, (depth_end)*2.0-1.0, 1.0);
+    vec4 start_clip = vec4((px/viewportWidth)*2.0-1.0, (py/viewportHeight)*2.0-1.0, (depth_start)*2.0-1.0, 1.0);
+    vec4 end_clip = vec4((px/viewportWidth)*2.0-1.0, (py/viewportHeight)*2.0-1.0, (depth_end)*2.0-1.0, 1.0);
 
     // start and end in local coords
     vec4 start_object = gl_ModelViewProjectionMatrixInverse * start_clip;
