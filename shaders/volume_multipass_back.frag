@@ -15,12 +15,15 @@ void main(void)
 
     if (gl_FragCoord.z<texture_depth)
     {
+        gl_FragDepth = gl_FragCoord.z;
+
         // fragment starts infront of all other scene objects
         vec4 ray_color = computeRayColor(gl_FragCoord.x, gl_FragCoord.y, gl_FragCoord.z, 0.0);
         gl_FragColor = mix(color, ray_color, ray_color.a);
     }
     else
     {
+        gl_FragDepth = texture_depth;
         // fragment starts behind other scene objects
         if (color.a<1.0)
         {
@@ -47,4 +50,5 @@ void main(void)
             gl_FragColor = mix(color, ray_color, ray_color.a);
         }
     }
+
 }
