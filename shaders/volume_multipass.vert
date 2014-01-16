@@ -1,11 +1,11 @@
 #version 110
 
-uniform mat4 texgen2;
+uniform mat4 texgen;
 
 varying vec4 cameraPos;
 varying vec4 vertexPos;
 varying vec3 lightDirection;
-varying mat4 texgen;
+varying mat4 texgen_withProjectionMatrixInverse;
 varying vec4 baseColor;
 
 varying float near;
@@ -40,12 +40,5 @@ void main(void)
         lightDirection = normalize((lightPosition-vertexPos).xyz);
     }
 
-#if 0
-    texgen = mat4(gl_ObjectPlaneS[0],
-                    gl_ObjectPlaneT[0],
-                    gl_ObjectPlaneR[0],
-                    gl_ObjectPlaneQ[0]);
-#else
-    texgen =  texgen2 * gl_ProjectionMatrixInverse;
-#endif
+    texgen_withProjectionMatrixInverse =  texgen * gl_ProjectionMatrixInverse;
 }
