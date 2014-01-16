@@ -1,5 +1,7 @@
 #version 110
 
+uniform mat4 texgen2;
+
 varying vec4 cameraPos;
 varying vec4 vertexPos;
 varying vec3 lightDirection;
@@ -38,9 +40,12 @@ void main(void)
         lightDirection = normalize((lightPosition-vertexPos).xyz);
     }
 
-
+#if 0
     texgen = mat4(gl_ObjectPlaneS[0],
                     gl_ObjectPlaneT[0],
                     gl_ObjectPlaneR[0],
                     gl_ObjectPlaneQ[0]);
+#else
+    texgen =  texgen2 * gl_ProjectionMatrixInverse;
+#endif
 }

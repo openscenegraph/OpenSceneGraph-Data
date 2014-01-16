@@ -6,6 +6,7 @@ uniform vec3 volumeCellSize;
 
 uniform float SampleRatioValue;
 uniform float TransparencyValue;
+uniform mat4 texgen2;
 
 varying mat4 texgen;
 
@@ -142,6 +143,7 @@ vec4 computeRayColor(float px, float py, float depth_start, float depth_end)
     vec4 start_clip = vec4((px/viewportWidth)*2.0-1.0, (py/viewportHeight)*2.0-1.0, (depth_start)*2.0-1.0, 1.0);
     vec4 end_clip = vec4((px/viewportWidth)*2.0-1.0, (py/viewportHeight)*2.0-1.0, (depth_end)*2.0-1.0, 1.0);
 
+#if 0
     // start and end in local coords
     vec4 start_object = gl_ModelViewProjectionMatrixInverse * start_clip;
     vec4 end_object = gl_ModelViewProjectionMatrixInverse * end_clip;
@@ -159,6 +161,21 @@ vec4 computeRayColor(float px, float py, float depth_start, float depth_end)
     // start and end in texture coords
     vec4 start_texcoord = clamped_start_object * texgen;
     vec4 end_texcoord = clamped_end_object * texgen;
+#else
+#if 0
+    vec4 start_texcoord = texgen2 * start_clip;
+    vec4 end_texcoord = texgen2 * end_clip;
+#else
+    vec4 start_texcoord = texgen * start_clip;
+    vec4 end_texcoord = texgen * end_clip;
+#endif
+#endif
+
+    start_texcoord.xyz = start_texcoord.xyz / start_texcoord.w;
+    start_texcoord.w = 1.0;
+
+    end_texcoord.xyz = end_texcoord.xyz / end_texcoord.w;
+    end_texcoord.w = 1.0;
 
     vec3 clamped_start_texcoord = clampToUnitCube(end_texcoord.xyz, start_texcoord.xyz);
     vec3 clamped_end_texcoord = clampToUnitCube(start_texcoord.xyz, end_texcoord.xyz);
