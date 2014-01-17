@@ -15,12 +15,6 @@ void main(void)
     float texture_depth = texture2D( depthTexture, texcoord).s;
     float front_depth = texture2D( frontFaceDepthTexture, texcoord).s;
 
-#if 0
-    gl_FragColor = vec4(front_depth,front_depth,front_depth,front_depth);
-    gl_FragDepth = front_depth;
-    return;
-#endif
-
     // if front_depth is set to the far plane then front
     // face has been clipped out by the near plane, so assume
     // front_depth is near plane and reset depth to 0.0
@@ -33,7 +27,6 @@ void main(void)
         gl_FragDepth = gl_FragCoord.z;
 
         vec4 ray_color = computeRayColor(gl_FragCoord.x, gl_FragCoord.y, gl_FragCoord.z, front_depth);
-        // ray_color *= vec4(1.0,0.0,0.0,1.0);
 
         gl_FragColor = mix(color, ray_color, ray_color.a);
     }
