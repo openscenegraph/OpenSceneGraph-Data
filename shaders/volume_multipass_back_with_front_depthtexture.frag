@@ -24,7 +24,7 @@ void main(void)
     {
         // fragment starts infront of all other scene objects
 
-        gl_FragDepth = gl_FragCoord.z;
+        gl_FragDepth = front_depth; // gl_FragCoord.z;
 
         vec4 ray_color = computeRayColor(gl_FragCoord.x, gl_FragCoord.y, gl_FragCoord.z, front_depth);
 
@@ -34,7 +34,14 @@ void main(void)
     {
         // fragment starts behind other scene objects
 
-        gl_FragDepth = texture_depth;
+        if (front_depth<texture_depth)
+        {
+            gl_FragDepth = front_depth;
+        }
+        else
+        {
+            gl_FragDepth = texture_depth;
+        }
 
         if (color.a<1.0)
         {
