@@ -33,6 +33,7 @@ void main(void)
     else
     {
         // fragment starts behind other scene objects
+        discard;
 
         if (front_depth<texture_depth)
         {
