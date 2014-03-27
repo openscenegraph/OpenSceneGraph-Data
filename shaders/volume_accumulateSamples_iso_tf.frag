@@ -10,7 +10,7 @@ uniform float IsoSurfaceValue;
 
 varying vec3 lightDirection;
 
-vec4 accumulateSamples(vec3 ts, vec3 te, vec3 dt, float scale, float cutoff, int num_iterations)
+vec4 accumulateSamples(vec4 fragColor, vec3 ts, vec3 te, vec3 dt, float scale, float cutoff, int num_iterations)
 {
     vec3 texcoord = te.xyz;
 

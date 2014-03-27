@@ -9,9 +9,9 @@ uniform float TransparencyValue;
 varying mat4 texgen_withProjectionMatrixInverse;
 
 // forward declare, probided by volume_accumulateSamples*.frag shaders
-vec4 accumulateSamples(vec3 ts, vec3 te, vec3 dt, float scale, float cutoff, int num_iterations);
+vec4 accumulateSamples(vec4 fragColor, vec3 ts, vec3 te, vec3 dt, float scale, float cutoff, int num_iterations);
 
-vec4 accumulateSegment(vec3 ts, vec3 te)
+vec4 accumulateSegment(vec4 fragColor, vec3 ts, vec3 te)
 {
     const int max_iterations = 8192;
 
@@ -45,9 +45,7 @@ vec4 accumulateSegment(vec3 ts, vec3 te)
 
     float cutoff = 1.0-1.0/256.0;
 
-    vec4 fragColor;
-
-    fragColor = accumulateSamples(ts, te, deltaTexCoord, scale, cutoff, num_iterations);
+    fragColor = accumulateSamples(fragColor, ts, te, deltaTexCoord, scale, cutoff, num_iterations);
 
     fragColor *= baseColor;
 
@@ -105,7 +103,7 @@ vec3 clampToUnitCube(vec3 ts, vec3 te)
 }
 
 
-vec4 computeRayColor(float px, float py, float depth_start, float depth_end)
+vec4 computeRayColor(vec4 fragColor, float px, float py, float depth_start, float depth_end)
 {
     float viewportWidth = viewportDimensions[2];
     float viewportHeight = viewportDimensions[3];
@@ -129,5 +127,5 @@ vec4 computeRayColor(float px, float py, float depth_start, float depth_end)
     vec3 clamped_start_texcoord = clampToUnitCube(end_texcoord.xyz, start_texcoord.xyz);
     vec3 clamped_end_texcoord = clampToUnitCube(start_texcoord.xyz, end_texcoord.xyz);
 
-    return accumulateSegment(clamped_start_texcoord, clamped_end_texcoord);
+    return accumulateSegment(fragColor, clamped_start_texcoord, clamped_end_texcoord);
 }
