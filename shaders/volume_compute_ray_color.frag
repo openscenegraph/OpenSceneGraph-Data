@@ -5,7 +5,6 @@ uniform sampler3D volumeTexture;
 uniform vec3 volumeCellSize;
 
 uniform float SampleRatioValue;
-uniform float TransparencyValue;
 varying mat4 texgen_withProjectionMatrixInverse;
 
 // forward declare, probided by volume_accumulateSamples*.frag shaders
@@ -30,7 +29,6 @@ vec4 accumulateSegment(vec4 fragColor, vec3 ts, vec3 te)
     if (num_iterations>max_iterations)
     {
         num_iterations = max_iterations;
-        baseColor.r = 0.0;
     }
 
     // traverse from front to back
@@ -40,8 +38,6 @@ vec4 accumulateSegment(vec4 fragColor, vec3 ts, vec3 te)
     //float scale = 0.5/sampleRatio;
     float scale = stepLength/length(volumeCellSize);
     if (scale>1.0) scale = 1.0;
-
-    scale *= TransparencyValue;
 
     float cutoff = 1.0-1.0/256.0;
 
