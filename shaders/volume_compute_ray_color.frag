@@ -3,9 +3,10 @@
 uniform vec4 viewportDimensions;
 uniform sampler3D volumeTexture;
 uniform vec3 volumeCellSize;
-
+uniform mat4 tileToImage;
 uniform float SampleRatioValue;
-varying mat4 texgen_withProjectionMatrixInverse;
+
+varying mat4 texgen_eyeToTile;
 
 // forward declare, probided by volume_accumulateSamples*.frag shaders
 vec4 accumulateSamples(vec4 fragColor, vec3 ts, vec3 te, vec3 dt, float scale, float cutoff, int num_iterations);
@@ -111,8 +112,22 @@ vec4 computeRayColor(vec4 fragColor, float px, float py, float depth_start, floa
     vec4 start_clip = vec4((px/viewportWidth)*2.0-1.0, (py/viewportHeight)*2.0-1.0, (depth_start)*2.0-1.0, 1.0);
     vec4 end_clip = vec4((px/viewportWidth)*2.0-1.0, (py/viewportHeight)*2.0-1.0, (depth_end)*2.0-1.0, 1.0);
 
-    vec4 start_texcoord = texgen_withProjectionMatrixInverse * start_clip;
-    vec4 end_texcoord = texgen_withProjectionMatrixInverse * end_clip;
+    // compute the coords in tile coordinates
+    vec4 start_tile = texgen_eyeToTile * start_clip;
+    vec4 end_tile = texgen_eyeToTile * end_clip;
+
+    start_tile.xyz = start_tile.xyz / start_tile.w;
+    start_tile.w = 1.0;
+
+    end_tile.xyz = end_tile.xyz / end_tile.w;
+    end_tile.w = 1.0;
+
+    vec4 clamped_start_tile = vec4(clampToUnitCube(end_tile.xyz, start_tile.xyz), 1.0);
+    vec4 clamped_end_tile = vec4(clampToUnitCube(start_tile.xyz, end_tile.xyz), 1.0);
+
+    // compute texcoords in image/texture coords
+    vec4 start_texcoord = tileToImage * clamped_start_tile;
+    vec4 end_texcoord = tileToImage * clamped_end_tile;
 
     start_texcoord.xyz = start_texcoord.xyz / start_texcoord.w;
     start_texcoord.w = 1.0;

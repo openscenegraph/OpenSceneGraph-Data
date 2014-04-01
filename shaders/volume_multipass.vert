@@ -1,12 +1,13 @@
 #version 110
 
-uniform mat4 texgen;
+uniform mat4 eyeToTile;
+uniform mat4 tileToImage;
 
-varying vec4 cameraPos;
 varying vec4 vertexPos;
 varying vec3 lightDirection;
-varying mat4 texgen_withProjectionMatrixInverse;
 varying vec4 baseColor;
+
+varying mat4 texgen_eyeToTile;
 
 varying float near;
 varying float far;
@@ -24,7 +25,6 @@ void main(void)
 
     gl_Position = ftransform();
 
-    cameraPos = gl_ModelViewMatrixInverse * vec4(0,0,0,1);
     vertexPos = gl_Vertex;
     baseColor = gl_FrontMaterial.diffuse;
 
@@ -40,5 +40,5 @@ void main(void)
         lightDirection = normalize((lightPosition-vertexPos).xyz);
     }
 
-    texgen_withProjectionMatrixInverse =  texgen * gl_ProjectionMatrixInverse;
+    texgen_eyeToTile =  eyeToTile * gl_ProjectionMatrixInverse;
 }
