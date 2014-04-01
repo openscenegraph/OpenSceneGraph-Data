@@ -20,7 +20,7 @@ vec4 accumulateSamples(vec4 fragColor, vec3 ts, vec3 te, vec3 dt, float scale, f
         float v = a * tfScale + tfOffset;
         vec4 color = texture1D( tfTexture, v);
 
-        if (a>AlphaFuncValue)
+        if (a>=AlphaFuncValue)
         {
             float ca = clamp(color.a*TransparencyValue, 0.0, 1.0);
             float new_transmitance = transmittance*pow(1.0-ca, scale);

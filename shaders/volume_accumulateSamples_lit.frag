@@ -22,7 +22,7 @@ vec4 accumulateSamples(vec4 fragColor, vec3 ts, vec3 te, vec3 dt, float scale, f
     {
         vec4 color = texture3D( volumeTexture, texcoord);
 
-        if (color.a>AlphaFuncValue)
+        if (color.a>=AlphaFuncValue)
         {
 
             float px = texture3D( volumeTexture, texcoord + deltaX).a;
