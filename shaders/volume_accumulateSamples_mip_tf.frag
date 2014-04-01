@@ -3,6 +3,7 @@
 uniform sampler3D volumeTexture;
 
 uniform float TransparencyValue;
+uniform float AlphaFuncValue;
 uniform sampler1D tfTexture;
 uniform float tfScale;
 uniform float tfOffset;
@@ -19,8 +20,12 @@ vec4 accumulateSamples(vec4 fragColor, vec3 ts, vec3 te, vec3 dt, float scale, f
         if (a>max_a)
         {
             float v = a * tfScale + tfOffset;
-            fragColor = texture1D( tfTexture, v);
-            max_a = a;
+            vec4 color = texture1D( tfTexture, v);
+            if (color.a>AlphaFuncValue)
+            {
+                fragColor = color;
+                max_a = a;
+            }
         }
 
         texcoord += dt;
@@ -28,7 +33,7 @@ vec4 accumulateSamples(vec4 fragColor, vec3 ts, vec3 te, vec3 dt, float scale, f
         --num_iterations;
     }
 
-    fragColor.a *= Transparency;
+    fragColor.a *= TransparencyValue;
 
     return fragColor;
 }
