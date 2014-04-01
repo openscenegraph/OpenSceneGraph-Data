@@ -5,7 +5,7 @@ uniform sampler3D volumeTexture;
 uniform sampler1D tfTexture;
 uniform float tfScale;
 uniform float tfOffset;
-
+uniform float TransparencyValue;
 uniform float IsoSurfaceValue;
 
 varying vec3 lightDirection;
@@ -53,6 +53,7 @@ vec4 accumulateSamples(vec4 fragColor, vec3 ts, vec3 te, vec3 dt, float scale, f
                 color.g *= lightScale;
                 color.b *= lightScale;
             }
+            fragColor.a *= Transparency;
             return color;
         }
 

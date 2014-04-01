@@ -2,21 +2,25 @@
 
 uniform sampler3D volumeTexture;
 
+uniform float TransparencyValue;
 uniform float AlphaFuncValue;
 
 vec4 accumulateSamples(vec4 fragColor, vec3 ts, vec3 te, vec3 dt, float scale, float cutoff, int num_iterations)
 {
     vec3 texcoord = te.xyz;
 
-    while(num_iterations>0 && fragColor.a<cutoff)
+    float transmittance = 1.0;
+    float t_cutoff = 1.0-cutoff;
+    while(num_iterations>0 && transmittance>=t_cutoff)
     {
         vec4 color = texture3D( volumeTexture, texcoord);
 
         if (color.a>AlphaFuncValue)
         {
-            float r = color.a * ((1.0-fragColor.a)*scale);
+            float new_transmitance = transmittance*pow(1.0-color.a*TransparencyValue, scale);
+            float r = transmittance-new_transmitance;
             fragColor.rgb += color.rgb*r;
-            fragColor.a += r;
+            transmittance = new_transmitance;
         }
 
         texcoord += dt;
@@ -24,6 +28,7 @@ vec4 accumulateSamples(vec4 fragColor, vec3 ts, vec3 te, vec3 dt, float scale, f
         --num_iterations;
     }
 
+    fragColor.a = clamp(1.0-transmittance, 0.0, 1.0);
     if (num_iterations>0) fragColor.a = 1.0;
 
     return fragColor;
