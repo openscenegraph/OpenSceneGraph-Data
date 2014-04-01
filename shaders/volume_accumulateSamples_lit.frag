@@ -44,7 +44,8 @@ vec4 accumulateSamples(vec4 fragColor, vec3 ts, vec3 te, vec3 dt, float scale, f
                 color.b *= lightScale;
             }
 
-            float new_transmitance = transmittance*pow(1.0-color.a*TransparencyValue,scale);
+            float ca = clamp(color.a*TransparencyValue, 0.0, 1.0);
+            float new_transmitance = transmittance*pow(1.0-ca, scale);
             float r = transmittance-new_transmitance;
             fragColor.rgb += color.rgb*r;
             transmittance = new_transmitance;

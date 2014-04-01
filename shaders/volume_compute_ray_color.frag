@@ -36,7 +36,7 @@ vec4 accumulateSegment(vec4 fragColor, vec3 ts, vec3 te)
     float stepLength = length(deltaTexCoord);
 
     //float scale = 0.5/sampleRatio;
-    float scale = stepLength/length(volumeCellSize);
+    float scale = 1.73*stepLength/length(volumeCellSize);
     if (scale>1.0) scale = 1.0;
 
     float cutoff = 1.0-1.0/256.0;

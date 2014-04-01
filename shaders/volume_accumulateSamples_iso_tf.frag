@@ -53,7 +53,7 @@ vec4 accumulateSamples(vec4 fragColor, vec3 ts, vec3 te, vec3 dt, float scale, f
                 color.g *= lightScale;
                 color.b *= lightScale;
             }
-            fragColor.a *= Transparency;
+            fragColor.a = clamp(fragColor.a*Transparency, 0.0, 1.0);
             return color;
         }
 
