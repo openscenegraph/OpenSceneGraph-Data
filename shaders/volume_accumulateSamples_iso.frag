@@ -29,14 +29,8 @@ vec4 accumulateSamples(vec4 fragColor, vec3 ts, vec3 te, vec3 dt, float scale, f
             float r = (targetValue-color.a)/(previousColor.a-color.a);
             texcoord = texcoord - r*dt;
 
-#if 0
-            color = texture3D( volumeTexture, texcoord);
-#else
-            color.r = 1.0;
-            color.g = 1.0;
-            color.b = 1.0;
-            color.a = 1.0;
-#endif
+            color.r = vec4(1.0, 1.0, 1.0, 1.0);
+
             float px = texture3D( volumeTexture, texcoord + deltaX).a;
             float py = texture3D( volumeTexture, texcoord + deltaY).a;
             float pz = texture3D( volumeTexture, texcoord + deltaZ).a;
@@ -55,6 +49,8 @@ vec4 accumulateSamples(vec4 fragColor, vec3 ts, vec3 te, vec3 dt, float scale, f
                 color.g *= lightScale;
                 color.b *= lightScale;
             }
+
+            color.a = clamp(color.a*TransparencyValue, 0.0, 1.0);
             return color;
         }
 
