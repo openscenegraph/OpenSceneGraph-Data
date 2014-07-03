@@ -3,7 +3,7 @@
 uniform sampler3D volumeTexture;
 
 uniform float IsoSurfaceValue;
-
+uniform float TransparencyValue;
 varying vec3 lightDirection;
 
 vec4 accumulateSamples(vec4 fragColor, vec3 ts, vec3 te, vec3 dt, float scale, float cutoff, int num_iterations)
@@ -29,7 +29,7 @@ vec4 accumulateSamples(vec4 fragColor, vec3 ts, vec3 te, vec3 dt, float scale, f
             float r = (targetValue-color.a)/(previousColor.a-color.a);
             texcoord = texcoord - r*dt;
 
-            color.r = vec4(1.0, 1.0, 1.0, 1.0);
+            color.rgba = vec4(1.0, 1.0, 1.0, 1.0);
 
             float px = texture3D( volumeTexture, texcoord + deltaX).a;
             float py = texture3D( volumeTexture, texcoord + deltaY).a;
