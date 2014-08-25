@@ -424,6 +424,5 @@ widget.traverse = function (widget, visitor)
 end
 
 widget:createGraphics();
-widget:load("vs.osgt");
 
 return widget;
