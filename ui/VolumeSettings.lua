@@ -46,10 +46,16 @@ widget.updateLineEdit = function(widget, name, value)
     editWidget = widget:getWidget(name);
     if (not editWidget) then return end;
 
-
-    -- print("Updating edit text", editWidget);
-
-    editWidget.Text = value;
+    if (type(value)=="table") then
+        if (value.ModifiedCount ~= editWidget.ModifiedCount) then
+            editWidget.ModifiedCount = value.ModifiedCount;
+            editWidget.Text = value.Value;
+            print("widget.updateLineEdit() ", editWidget, value, editWidget.Text);
+        end
+    else
+        print("widget.updateLineEdit() ", editWidget, editWidget.Text);
+        editWidget.Text = value;
+    end
 end
 
 widget.updateComboBox = function(widget, name, value)
@@ -72,24 +78,39 @@ widget.updateWidgets = function(widget)
 
     if (not widget.VolumeSettings) then return; end;
 
-    if (widget.WidgetsUpated) then return; end;
-
     widget.WidgetsUpated = true;
 
-    widget:updateLineEdit("FilenameEdit", widget.VolumeSettings.Filename);
-    widget:updateComboBox("TechniqueComboBox", widget.VolumeSettings.Technique);
-    widget:updateComboBox("ShadingModelComboBox", widget.VolumeSettings.ShadingModel);
+    vs = widget.VolumeSettings;
 
-    widget:updateLineEdit("SampleRatioEdit", widget.VolumeSettings.SampleRatio);
-    widget:updateLineEdit("SampleRatioWhenMovingEdit", widget.VolumeSettings.SampleRatioWhenMoving);
-    widget:updateLineEdit("CutoffEdit", widget.VolumeSettings.Cutoff);
-    widget:updateLineEdit("TransparencyEdit", widget.VolumeSettings.Transparency);
+    if (widget.ModifiedCount~=vs.ModifiedCount) then
+        print("Need to update FilenameEdit etc.");
+        widget:updateLineEdit("FilenameEdit", vs.Filename);
+        widget:updateComboBox("TechniqueComboBox", vs.Technique);
+        widget:updateComboBox("ShadingModelComboBox", vs.ShadingModel);
+    end
+
+
+    widget:updateLineEdit("SampleRatioEdit", vs.SampleRatioProperty);
+    widget:updateLineEdit("SampleRatioWhenMovingEdit", vs.SampleRatioWhenMovingProperty);
+    widget:updateLineEdit("CutoffEdit", vs.CutoffProperty);
+    widget:updateLineEdit("TransparencyEdit", vs.TransparencyProperty);
+
+    widget.ModifiedCount = vs.ModifiedCount;
 
 end
 
 widget.getEditValue = function(widget, name)
     editWidget = widget:getWidget(name);
     if (editWidget) then return editWidget.Text end;
+    return nil;
+end
+
+widget.copyEditValueToProperty = function(widget, name, property)
+    editWidget = widget:getWidget(name);
+    if (editWidget) then
+        property.Value = editWidget.Text;
+        editWidget.ModifiedCount = property.ModifiedCount;
+    end;
     return nil;
 end
 
@@ -115,11 +136,12 @@ widget.updateVolumeSettings = function(widget)
     vs.Technique = widget:getComboBoxValue("TechniqueComboBox");
     vs.ShadingModel = widget:getComboBoxValue("ShadingModelComboBox");
 
-    vs.SampleRatio = widget:getEditValue("SampleRatioEdit");
-    vs.SampleRatioWhenMoving = widget:getEditValue("SampleRatioWhenMovingEdit");
-    vs.Cutoff = widget:getEditValue("CutoffEdit");
-    local te = widget:getEditValue("TransparencyEdit"); if ((te ~= nil) and (#te ~=0)) then vs.Transparency = te; end
+    widget:copyEditValueToProperty("SampleRatioEdit", vs.SampleRatioProperty);
+    widget:copyEditValueToProperty("SampleRatioWhenMovingEdit", vs.SampleRatioWhenMovingProperty);
+    widget:copyEditValueToProperty("CutoffEdit", vs.CutoffProperty);
+    widget:copyEditValueToProperty("TransparencyEdit", vs.TransparencyProperty);
 
+    widget.ModifiedCount = vs.ModifiedCount;
 end
 
 widget.createGraphics = function(widget)
@@ -409,12 +431,13 @@ widget.traverse = function (widget, visitor)
 
     -- print("widget.traverse ", visitor);
 
-    local needToSyncWidgets = (visitor.VisitorType == "EVENT_VISITOR");
-    if (not widget.WidgetsUpated) then
-        --if (widget.SyncedVolumeSettings~=widget.VolumeSettings) then
-            widget:updateWidgets();
-        --end
+    if (widget.ModifiedCount~=widget.VolumeSettings.ModifiedCount) then
+        print("\nWidget has been modified\n");
+        widget.ModifiedCount = widget.VolumeSettings.ModifiedCount;
     end
+
+    local needToSyncWidgets = (visitor.VisitorType == "EVENT_VISITOR");
+    widget:updateWidgets();
 
     widget:traverseImplementation(visitor);
 
