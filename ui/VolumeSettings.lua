@@ -3,11 +3,24 @@ widget.Name = "VolumeSettingsDialog";
 
 widget.load = function(widget, filename)
 
-    widget.VolumeSettings = readObjectFile(filename);
+    newVolumeSettings = readObjectFile(filename);
 
-    if (widget.VolumeSettings) then
+    if (newVolumeSettings) then
         print("Loaded VolumeSettings file "..filename);
+        if (widget.VolumeSettings) then
+            vs = widget.VolumeSettings;
+            vs.Technique = newVolumeSettings.Technique;
+            vs.ShadingModel = newVolumeSettings.ShadingModel;
+            vs.SampleRatio = newVolumeSettings.SampleRatio;
+            vs.SampleRatioWhenMoving = newVolumeSettings.SampleRatioWhenMoving;
+            vs.Cutoff = newVolumeSettings.Cutoff;
+            vs.Transparency = newVolumeSettings.Transparency;
+        else
+            widget.VolumeSettings = newVolumeSettings;
+        end
+
         widget.VolumeSettings.Filename = filename;
+        
         widget.WidgetsUpated = false;
         widget:updateWidgets();
     end
@@ -50,10 +63,8 @@ widget.updateLineEdit = function(widget, name, value)
         if (value.ModifiedCount ~= editWidget.ModifiedCount) then
             editWidget.ModifiedCount = value.ModifiedCount;
             editWidget.Text = value.Value;
-            print("widget.updateLineEdit() ", editWidget, value, editWidget.Text);
         end
     else
-        print("widget.updateLineEdit() ", editWidget, editWidget.Text);
         editWidget.Text = value;
     end
 end
@@ -81,6 +92,8 @@ widget.updateWidgets = function(widget)
     widget.WidgetsUpated = true;
 
     vs = widget.VolumeSettings;
+
+    --print("vs.ModifiedCount=", vs.ModifiedCount, " widget.ModifiedCount=",widget.ModifiedCount);
 
     if (widget.ModifiedCount~=vs.ModifiedCount) then
         print("Need to update FilenameEdit etc.");
@@ -121,6 +134,8 @@ widget.getComboBoxValue = function(widget, name)
 end
 
 widget.updateVolumeSettings = function(widget)
+
+    if (not(widget.VolumeSettingsUpdated)) then return; end
 
     print("------   widget.updateVolumeSettings -------");
 
@@ -400,7 +415,7 @@ widget.createGraphics = function(widget)
     currentY = currentY-lg;
 
     widget:addChild(createLabel("ShadingModelLabel", "Shading Model", currentX, currentY, labelWidth, labelHeight));
-    widget:addChild(createComboBox("ShadingModelComboBox", rightCurrentX, currentY, editWidth, editHeight, ComboBoxIndexChanged, "Standard", "Light", "Isosurface", "MIP"));
+    widget:addChild(createComboBox("ShadingModelComboBox", rightCurrentX, currentY, editWidth, editHeight, ComboBoxIndexChanged, "Standard", "Light", "Isosurface", "MaximumIntensityProjection"));
     currentY = currentY-lg;
 
     widget:addChild(createLabel("SampleRatioLabel", "Sample Ratio", currentX, currentY, labelWidth, labelHeight));
@@ -433,17 +448,20 @@ widget.traverse = function (widget, visitor)
 
     if (widget.ModifiedCount~=widget.VolumeSettings.ModifiedCount) then
         print("\nWidget has been modified\n");
-        widget.ModifiedCount = widget.VolumeSettings.ModifiedCount;
+        --widget.ModifiedCount = widget.VolumeSettings.ModifiedCount;
     end
 
     local needToSyncWidgets = (visitor.VisitorType == "EVENT_VISITOR");
-    widget:updateWidgets();
+    if (needToSyncWidgets) then
+        widget:updateWidgets();
+    end
 
     widget:traverseImplementation(visitor);
 
-    if (widget.VolumeSettingsUpdated) then
+    if (needToSyncWidgets) then
         widget:updateVolumeSettings();
     end
+
 end
 
 widget:createGraphics();
