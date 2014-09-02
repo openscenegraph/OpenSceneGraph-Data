@@ -20,7 +20,7 @@ widget.load = function(widget, filename)
         end
 
         widget.VolumeSettings.Filename = filename;
-        
+
         widget.WidgetsUpated = false;
         widget:updateWidgets();
     end
@@ -465,5 +465,6 @@ widget.traverse = function (widget, visitor)
 end
 
 widget:createGraphics();
+-- widget.VolumeSettings = new("osgVolume::VolumeSettings");
 
 return widget;
