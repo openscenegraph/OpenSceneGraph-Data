@@ -154,6 +154,7 @@ widget.updateVolumeSettings = function(widget)
     widget:copyEditValueToProperty("SampleRatioEdit", vs.SampleRatioProperty);
     widget:copyEditValueToProperty("SampleRatioWhenMovingEdit", vs.SampleRatioWhenMovingProperty);
     widget:copyEditValueToProperty("CutoffEdit", vs.CutoffProperty);
+    widget:copyEditValueToProperty("CutoffEdit", vs.IsoSurfaceProperty);
     widget:copyEditValueToProperty("TransparencyEdit", vs.TransparencyProperty);
 
     widget.ModifiedCount = vs.ModifiedCount;
@@ -465,6 +466,7 @@ widget.traverse = function (widget, visitor)
 end
 
 widget:createGraphics();
+--widget:load("vs.osgt");
 -- widget.VolumeSettings = new("osgVolume::VolumeSettings");
 
 return widget;
