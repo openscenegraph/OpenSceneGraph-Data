@@ -1,4 +1,4 @@
-return function(extents)
+return function()
 
 local widget = new("osgUI::Dialog");
 widget.Name = "VolumeSettingsDialog";
@@ -543,4 +543,4 @@ widget.VolumeSettings = new("osgVolume::VolumeSettings");
 --widget:load("vs.osgt");
 
 return widget;
-
+end
