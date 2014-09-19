@@ -1,5 +1,9 @@
 return function(extents)
 
+local WidgetUtils = require("WidgetUtils");
+print(">>>>>>>>>>>>>> WidgetUtils ",WidgetUtils);
+print(">>>>>>>>>>>>>> WidgetUtils ",WidgetUtils.createLabel);
+
 local widget = new("osgUI::Widget");
 
 widget.Name = "TransferFunctionWidget";
@@ -43,10 +47,17 @@ widget.createGraphics = function(widget)
     print("vertices ",vertices);
     print("colours ",colours);
 
-    vertices:add({x=widget.Extents.xMin, y=widget.Extents.yMin, z=widget.Extents.zMin});
-    vertices:add({x=widget.Extents.xMin, y=widget.Extents.yMax, z=widget.Extents.zMin});
-    vertices:add({x=widget.Extents.xMax, y=widget.Extents.yMin, z=widget.Extents.zMin});
-    vertices:add({x=widget.Extents.xMax, y=widget.Extents.yMax, z=widget.Extents.zMin});
+    local extents = { xMin = widget.Extents.xMin,
+                      yMin = widget.Extents.yMin+20.0,
+                      zMin = widget.Extents.zMin,
+                      xMax = widget.Extents.xMax,
+                      yMax = widget.Extents.yMax,
+                      zMax = widget.Extents.zMax };
+
+    vertices:add({x=extents.xMin, y=extents.yMin, z=extents.zMin});
+    vertices:add({x=extents.xMin, y=extents.yMax, z=extents.zMin});
+    vertices:add({x=extents.xMax, y=extents.yMin, z=extents.zMin});
+    vertices:add({x=extents.xMax, y=extents.yMax, z=extents.zMin});
 
     colours:add({red=0.0,green=1.0,blue=1.0,alpha=1.0});
 
@@ -58,7 +69,71 @@ widget.createGraphics = function(widget)
     primitives:add(1);
     primitives:add(2);
 
+
+    local cs = 5.0;
+    local lg = cs*1.5;
+    local labelWidth = cs*13.0;
+    local labelHeight = cs*1.3;
+    local editWidth = cs*7.0;
+    local editHeight = labelHeight;
+    local margin = cs*0.35;
+
+    local currentX = widget.Extents.xMin;
+    local currentY = extents.yMin-margin-labelHeight;
+
+    local width = cs*3.0;
+    local x1 = currentX;
+    local x2 = x1+width;
+    local x3 = x2+width;
+    local x4 = x3+width;
+    local x5 = x4+width;
+    local x6 = x5+width;
+    local x7 = x6+width;
+    local x8 = x7+width;
+
+    widget:addChild(WidgetUtils.createLabel("Intensity", "Intensity", x1, currentY, x2-x1, labelHeight));
+    widget:addChild(WidgetUtils.createLineEdit("IntensityEdit", x2, currentY, x3-x2-cs, editHeight, 1.0, 0.0, 1.0, 5));
+    widget:addChild(WidgetUtils.createLabel("Alpha", "Alpha", x3, currentY, x3-x2, labelHeight));
+    widget:addChild(WidgetUtils.createLineEdit("AlphaEdit", x4, currentY, x4-x3-cs, editHeight, 1.0, 0.0, 1.0, 5));
+    widget:addChild(WidgetUtils.createLabel("Name", "Name", x5, currentY, x5-x4, labelHeight));
+    widget:addChild(WidgetUtils.createLineEdit("NameEdit", x6, currentY, x8-x6, editHeight));
+
+    currentY = currentY-lg;
+
+    widget:addChild(WidgetUtils.createLabel("Red", "Red", x1, currentY, x2-x1, labelHeight));
+    widget:addChild(WidgetUtils.createLineEdit("ReadEdit", x2, currentY, x3-x2-cs, editHeight, 1.0, 0.0, 255.0, 5));
+    widget:addChild(WidgetUtils.createLabel("Green", "Green", x3, currentY, x4-x3, labelHeight));
+    widget:addChild(WidgetUtils.createLineEdit("GreenEdit", x4, currentY, x5-x4-cs, editHeight, 1.0, 0.0, 255.0, 5));
+    widget:addChild(WidgetUtils.createLabel("Blue", "Blue", x5, currentY, x6-x5, labelHeight));
+    widget:addChild(WidgetUtils.createLineEdit("BlueEdit", x6, currentY, x6-x5-cs, editHeight, 1.0, 0.0, 255.0, 5));
+
+    local colourCB = WidgetUtils.createComboBox("ColourComboBox", x7, currentY, x8-x7, editHeight);
+    widget:addChild(colourCB);
+
+        item = new("osgUI::Item");
+        item.Text="bone";
+        item.Color = {r=1.0,g=1.0,b=0.0,a=1.0};
+        colourCB.Items:add(item);
+
+        item = new("osgUI::Item");
+        item.Text="skin";
+        item.Color = {r=1.0,g=1.0,b=1.0,a=1.0};
+        colourCB.Items:add(item);
+
+        item = new("osgUI::Item");
+        item.Text="muscle";
+        item.Color = {r=1.0,g=0.0,b=0.0,a=1.0};
+        colourCB.Items:add(item);
+
+
+
+
+
     widget:createGraphicsImplementation();
+
+
+
+
 
 end
 
