@@ -502,58 +502,13 @@ widget.createGraphics = function(widget)
     if (createTransferFunctionWidget) then
 
         local extents = { xMin = transferFunctionGroup.Extents.xMin+margin,
-                          yMin = transferFunctionGroup.Extents.yMin+20,
+                          yMin = transferFunctionGroup.Extents.yMin+margin,
                           zMin = transferFunctionGroup.Extents.zMin,
                           xMax = transferFunctionGroup.Extents.xMax-margin,
-                          yMax = transferFunctionGroup.Extents.yMax-12,
+                          yMax = transferFunctionGroup.Extents.yMax-margin-9,
                           zMax = transferFunctionGroup.Extents.zMax };
 
         transferFunctionGroup:addChild(createTransferFunctionWidget(extents));
-        currentY = extents.yMin-margin-labelHeight;
-
-        local width = cs*3.0;
-        local x1 = currentX;
-        local x2 = x1+width;
-        local x3 = x2+width;
-        local x4 = x3+width;
-        local x5 = x4+width;
-        local x6 = x5+width;
-        local x7 = x6+width;
-        local x8 = x7+width;
-
-        transferFunctionGroup:addChild(createLabel("Intensity", "Intensity", x1, currentY, x2-x1, labelHeight));
-        transferFunctionGroup:addChild(createLineEdit("IntensityEdit", x2, currentY, x3-x2-cs, editHeight, 1.0, 0.0, 1.0, 5));
-        transferFunctionGroup:addChild(createLabel("Alpha", "Alpha", x3, currentY, x3-x2, labelHeight));
-        transferFunctionGroup:addChild(createLineEdit("AlphaEdit", x4, currentY, x4-x3-cs, editHeight, 1.0, 0.0, 1.0, 5));
-        transferFunctionGroup:addChild(createLabel("Name", "Name", x5, currentY, x5-x4, labelHeight));
-        transferFunctionGroup:addChild(createLineEdit("NameEdit", x6, currentY, x8-x6, editHeight));
-
-        currentY = currentY-lg;
-
-        transferFunctionGroup:addChild(createLabel("Red", "Red", x1, currentY, x2-x1, labelHeight));
-        transferFunctionGroup:addChild(createLineEdit("ReadEdit", x2, currentY, x3-x2-cs, editHeight, 1.0, 0.0, 255.0, 5));
-        transferFunctionGroup:addChild(createLabel("Green", "Green", x3, currentY, x4-x3, labelHeight));
-        transferFunctionGroup:addChild(createLineEdit("GreenEdit", x4, currentY, x5-x4-cs, editHeight, 1.0, 0.0, 255.0, 5));
-        transferFunctionGroup:addChild(createLabel("Blue", "Blue", x5, currentY, x6-x5, labelHeight));
-        transferFunctionGroup:addChild(createLineEdit("BlueEdit", x6, currentY, x6-x5-cs, editHeight, 1.0, 0.0, 255.0, 5));
-
-        local colourCB = createComboBox("ColourComboBox", x7, currentY, x8-x7, editHeight, ComboBoxIndexChanged);
-        transferFunctionGroup:addChild(colourCB);
-
-            item = new("osgUI::Item");
-            item.Text="bone";
-            item.Color = {r=1.0,g=1.0,b=0.0,a=1.0};
-            colourCB.Items:add(item);
-
-            item = new("osgUI::Item");
-            item.Text="skin";
-            item.Color = {r=1.0,g=1.0,b=1.0,a=1.0};
-            colourCB.Items:add(item);
-
-            item = new("osgUI::Item");
-            item.Text="muscle";
-            item.Color = {r=1.0,g=0.0,b=0.0,a=1.0};
-            colourCB.Items:add(item);
 
     else
         print("************* Have NOT found TransferFunctionWidget.lua ****************");
