@@ -16,18 +16,17 @@ void main(void)
     if (texcoord.y<0.5) texcoord_up.y = texcoord_up.y+texelTexcoordSize.y;
     else texcoord_up.y = texcoord_up.y-texelTexcoordSize.y;
 
+
     float height_center = texture2D(terrainTexture, texcoord).r;
     float height_right = texture2D(terrainTexture, texcoord_right).r;
     float height_up = texture2D(terrainTexture, texcoord_up).r;
 
     vec2 gradient = vec2((height_center-height_right)*texelWorldRatio.x, (height_center-height_up)*texelWorldRatio.y);
-    vec3 normal = vec3(gradient.x, gradient.y, 1.0-gradient.x*gradient.x-gradient.y*gradient.y);
+    vec3 normal = normalize(vec3(gradient.x, gradient.y, 1.0));
     float intensity = normal.z;
-
     basecolor = vec4(intensity, intensity, intensity, 1.0);
 
     vec3 position = gl_Vertex.xyz + gl_Normal.xyz * height_center ;
-    gl_Position     = gl_ModelViewProjectionMatrix * vec4(position,1.0);
-
+    gl_Position   = gl_ModelViewProjectionMatrix * vec4(position,1.0);
 
 };
