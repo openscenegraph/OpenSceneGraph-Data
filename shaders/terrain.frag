@@ -12,5 +12,9 @@ void main(void)
                  texture2D( colorTexture2, texcoord)*multiplier +
                  texture2D( colorTexture3, texcoord)*multiplier;
 
+#if 1
     gl_FragColor = basecolor * color;
+#else
+    gl_FragColor = basecolor;//basecolor * color;
+#endif
 }
