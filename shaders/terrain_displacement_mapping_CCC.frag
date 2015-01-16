@@ -7,10 +7,14 @@ varying vec4 basecolor;
 
 void main(void)
 {
+#ifdef GL_TEXTURE_2D
     const float multiplier = 1.0/3.0;
     vec4 color = texture2D( colorTexture1, texcoord)*multiplier +
                  texture2D( colorTexture2, texcoord)*multiplier +
                  texture2D( colorTexture3, texcoord)*multiplier;
 
     gl_FragColor = basecolor * color;
+#else
+    gl_FragColor = basecolor;
+#endif
 }
