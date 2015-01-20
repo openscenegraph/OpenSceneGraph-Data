@@ -7,7 +7,7 @@ uniform sampler2D terrainTexture;
 
 #ifdef COMPUTE_DIAGONALS
 varying vec2 texcoord_in;
-varying float heights_in;
+varying vec3 normals_in;
 varying vec4 basecolor_in;
 #else
 varying vec2 texcoord;
@@ -95,12 +95,13 @@ void main(void)
     directionalLight( 0, normal, color);
 
 #else
+    vec3 normal = gl_Normal.xyz;
     vec4 color = vec4(1.0, 1.0, 1.0, 1.0);
 #endif
 
 
 #ifdef COMPUTE_DIAGONALS
-    heights_in = height_center;
+    normals_in = normal;
     texcoord_in = texcoord_center;
     basecolor_in = color;
 #else
