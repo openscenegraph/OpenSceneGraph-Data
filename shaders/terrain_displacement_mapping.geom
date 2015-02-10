@@ -1,4 +1,7 @@
 #version 120
+
+#pragma requires(COMPUTE_DIAGONALS)
+
 #extension GL_EXT_geometry_shader4 : enable
 
 varying in vec3 normals_in[4];
