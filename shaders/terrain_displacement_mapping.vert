@@ -1,4 +1,7 @@
 #version 120
+
+#pragma import_defines ( COMPUTE_DIAGONALS, GL_LIGHTING )
+
 #ifdef COMPUTE_DIAGONALS
 #extension GL_EXT_geometry_shader4 : enable
 #endif

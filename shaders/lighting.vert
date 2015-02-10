@@ -1,3 +1,5 @@
+#pragma requires(GL_LIGHTING)
+
 void directionalLight( int lightNum, vec3 normal, inout vec4 color )
 {
     vec3 n = normalize(gl_NormalMatrix * normal);
