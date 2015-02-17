@@ -1,11 +1,11 @@
-#pragma import_defines ( GL_LIGHTING, GL_TEXTURE_2D, VERTEX_FUNC(v) )
+#pragma import_defines ( LIGHTING, TEXTURE_2D, VERTEX_FUNC(v) )
 
-#ifdef GL_LIGHTING
+#ifdef LIGHTING
 // forward declare lighting computation, provided by lighting.vert shader
 void directionalLight( int lightNum, vec3 normal, inout vec4 color );
 #endif
 
-#ifdef GL_TEXTURE_2D
+#ifdef TEXTURE_2D
 varying vec2 texcoord;
 #endif
 
@@ -19,11 +19,11 @@ void main(void)
 {
     basecolor = gl_Color;
 
-#ifdef GL_LIGHTING
+#ifdef LIGHTING
     directionalLight( 0, gl_Normal.xyz, basecolor);
 #endif
 
-#ifdef GL_TEXTURE_2D
+#ifdef TEXTURE_2D
     // if we want texturing we need to pass on texture coords
     texcoord = gl_MultiTexCoord0.xy;
 #endif
