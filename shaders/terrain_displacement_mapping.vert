@@ -1,6 +1,6 @@
 #version 120
 
-#pragma import_defines ( COMPUTE_DIAGONALS, GL_LIGHTING )
+#pragma import_defines ( COMPUTE_DIAGONALS, LIGHTING )
 
 #ifdef COMPUTE_DIAGONALS
 #extension GL_EXT_geometry_shader4 : enable
@@ -18,7 +18,7 @@ varying vec4 basecolor;
 #endif
 
 
-#ifdef GL_LIGHTING
+#ifdef LIGHTING
 // forward declare lighting computation, provided by lighting.vert shader
 void directionalLight( int lightNum, vec3 normal, inout vec4 color );
 #endif
@@ -29,7 +29,7 @@ void main(void)
 
     float height_center = texture2D(terrainTexture, texcoord_center).r;
 
-#ifdef GL_LIGHTING
+#ifdef LIGHTING
     vec2 texelWorldRatio = gl_MultiTexCoord0.zw;
     vec2 texelTexcoordSize = gl_Color.xy;
 

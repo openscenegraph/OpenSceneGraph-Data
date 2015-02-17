@@ -1,4 +1,4 @@
-#pragma import_defines ( GL_TEXTURE_2D )
+#pragma import_defines ( TEXTURE_2D )
 
 uniform sampler2D colorTexture1;
 uniform sampler2D colorTexture2;
@@ -10,7 +10,7 @@ varying vec4 basecolor;
 
 void main(void)
 {
-#ifdef GL_TEXTURE_2D
+#ifdef TEXTURE_2D
     float totalWeights = TextureWeights[0]+TextureWeights[1]+TextureWeights[2];
 
     vec4 color = texture2D( colorTexture1, texcoord)*TextureWeights[0] +

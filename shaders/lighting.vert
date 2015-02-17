@@ -1,4 +1,4 @@
-#pragma requires(GL_LIGHTING)
+#pragma requires(LIGHTING)
 
 void directionalLight( int lightNum, vec3 normal, inout vec4 color )
 {
