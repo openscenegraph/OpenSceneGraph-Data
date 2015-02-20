@@ -10,7 +10,7 @@ varying vec4 basecolor;
 void main(void)
 {
 #ifdef TEXTURE_2D
-    float totalWeights = TextureWeights[0]+TextureWeights[1]+TextureWeights[2];
+    float totalWeights = TextureWeights[0]+TextureWeights[1];
 
     vec4 color = texture2D( colorTexture1, texcoord)*TextureWeights[0] +
                  texture2D( colorTexture2, texcoord)*TextureWeights[1];

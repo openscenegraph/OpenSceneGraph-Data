@@ -1,9 +1,32 @@
-#pragma import_defines ( TEXTURE_2D )
+#pragma import_defines ( TEXTURE_2D, TEXTURE_WEIGHTS, COLOR_LAYER0, COLOR_LAYER1, COLOR_LAYER2, CONTOUR_LAYER, CONTOUR_LAYER_NUM)
 
+
+#if defined(TEXTURE_2D) && defined(COLOR_LAYER0)
+uniform sampler2D colorTexture0;
+#endif
+
+#if defined(TEXTURE_2D) && defined(COLOR_LAYER1)
 uniform sampler2D colorTexture1;
+#endif
+
+#if defined(TEXTURE_2D) && defined(COLOR_LAYER2)
 uniform sampler2D colorTexture2;
-uniform sampler2D colorTexture3;
+#endif
+
+#if defined(TEXTURE_2D) && defined(CONTOUR_LAYER)
+#ifndef CONTOUR_LAYER_NUM
+#define CONTOUR_LAYER_NUM 0
+#endif
+uniform sampler1D contourTexture;
+#endif
+
+
+#if defined(TEXTURE_2D) && defined(TEXTURE_WEIGHTS)
 uniform float TextureWeights[];
+#define WEIGHTS_LOOKUP(i) TextureWeights[i]
+#else
+#define WEIGHTS_LOOKUP(i) 1.0
+#endif
 
 varying vec2 texcoord;
 varying vec4 basecolor;
@@ -11,13 +34,26 @@ varying vec4 basecolor;
 void main(void)
 {
 #ifdef TEXTURE_2D
-    float totalWeights = TextureWeights[0]+TextureWeights[1]+TextureWeights[2];
+    vec4 color = vec4(0.0, 0.0, 0.0, 0.0);
 
-    vec4 color = texture2D( colorTexture1, texcoord)*TextureWeights[0] +
-                 texture2D( colorTexture2, texcoord)*TextureWeights[1] +
-                 texture2D( colorTexture3, texcoord)*TextureWeights[2];
+    #ifdef COLOR_LAYER0
+        color = color + texture2D( colorTexture0, texcoord)*WEIGHTS_LOOKUP(0);
+    #endif
 
-    gl_FragColor = basecolor * mix(vec4(1.0,1.0,1.0,1.0), color, totalWeights);
+    #ifdef COLOR_LAYER1
+        color = color + texture2D( colorTexture1, texcoord)*WEIGHTS_LOOKUP(1);
+    #endif
+
+    #ifdef COLOR_LAYER2
+        color = color + texture2D( colorTexture2, texcoord)*WEIGHTS_LOOKUP(2);
+    #endif
+
+    #ifdef CONTOUR_LAYER
+        // note we need to add in height varying above.
+        color = color + texture1D( contourTexture, height)*WEIGHTS_LOOKUP(CONTOUR_LAYER_NUM);
+    #endif
+
+    gl_FragColor = basecolor * color;
 #else
     gl_FragColor = basecolor;
 #endif
