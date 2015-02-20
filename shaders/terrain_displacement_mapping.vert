@@ -1,12 +1,14 @@
 #version 120
 
-#pragma import_defines ( COMPUTE_DIAGONALS, LIGHTING )
+#pragma import_defines ( HEIGHTFIELD_LAYER, COMPUTE_DIAGONALS, LIGHTING )
 
 #ifdef COMPUTE_DIAGONALS
 #extension GL_EXT_geometry_shader4 : enable
 #endif
 
+#ifdef HEIGHTFIELD_LAYER
 uniform sampler2D terrainTexture;
+#endif
 
 #ifdef COMPUTE_DIAGONALS
 varying vec2 texcoord_in;
@@ -27,9 +29,13 @@ void main(void)
 {
     vec2 texcoord_center = gl_MultiTexCoord0.xy;
 
+#ifdef HEIGHTFIELD_LAYER
     float height_center = texture2D(terrainTexture, texcoord_center).r;
+#else
+    float height_center = 0.0;
+#endif
 
-#ifdef LIGHTING
+#if defined(LIGHTING) && defined(HEIGHTFIELD_LAYER)
     vec2 texelWorldRatio = gl_MultiTexCoord0.zw;
     vec2 texelTexcoordSize = gl_Color.xy;
 
@@ -97,6 +103,10 @@ void main(void)
     vec4 color = vec4(1.0,1.0,1.0,1.0);
     directionalLight( 0, normal, color);
 
+#elif defined(LIGHTING)
+    vec3 normal = gl_Normal.xyz;
+    vec4 color = vec4(1.0, 1.0, 1.0, 1.0);
+    directionalLight( 0, normal, color);
 #else
     vec3 normal = gl_Normal.xyz;
     vec4 color = vec4(1.0, 1.0, 1.0, 1.0);
