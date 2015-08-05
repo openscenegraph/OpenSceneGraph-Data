@@ -2,9 +2,9 @@ PositionAttitudeTransform {
   UniqueID PositionAttitudeTransform_0
   name "Collada visual scene group"
   description {
-	"Copyright 2008 Sony Computer Entertainment Inc."
-	"Licensed under the Creative Commons Attribution Noncommercial Share Alike license."
-	"See license file or www.creativecommons.org for details."
+    "Copyright 2008 Sony Computer Entertainment Inc."
+    "Licensed under the Creative Commons Attribution Noncommercial Share Alike license."
+    "See license file or www.creativecommons.org for details."
   }
   nodeMask 0xffffffff
   cullingActive TRUE
