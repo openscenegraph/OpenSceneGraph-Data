@@ -1,5 +1,7 @@
 return function()
 
+local WidgetUtils = require("WidgetUtils");
+
 local widget = new("osgUI::Dialog");
 widget.Name = "VolumeSettingsDialog";
 
@@ -166,7 +168,7 @@ widget.createGraphics = function(widget)
 
     print("Running widget.createGraphics");
 
-    local function createLabel(name, text, x, y, width, height)
+    local function _createLabel(name, text, x, y, width, height)
         local label = new("osgUI::Label");
         label.Name = name;
         label.Extents = {xMin=x, yMin=y, zMin=0, xMax=x+width, yMax=y+height, zMax=0};
@@ -176,7 +178,7 @@ widget.createGraphics = function(widget)
         return label;
     end
 
-    local function createComboBox(name, x, y, width, height, ...)
+    local function _createComboBox(name, x, y, width, height, ...)
         local cb = new("osgUI::ComboBox");
         cb.Name = name;
         cb.Extents = {xMin=x, yMin=y, zMin=0, xMax=x+width, yMax=y+height, zMax=0};
@@ -216,7 +218,7 @@ widget.createGraphics = function(widget)
         widget:currentIndexChangedImplementation(value);
     end
 
-    local function createButton(name, x, y, width, height, text, pressedCallback)
+    local function _createButton(name, x, y, width, height, text, pressedCallback)
         local pb = new("osgUI::PushButton");
         pb.Name = name;
         pb.Extents = {xMin=x, yMin=y, zMin=0, xMax=x+width, yMax=y+height, zMax=0};
@@ -253,7 +255,7 @@ widget.createGraphics = function(widget)
     end
 
 
-    local function createLineEdit(name, x, y, width, height, text, minValue, maxValue, numDecimals)
+    local function _createLineEdit(name, x, y, width, height, text, minValue, maxValue, numDecimals)
         local le = new("osgUI::LineEdit");
         le.Name = name;
         le.Extents = {xMin=x, yMin=y, zMin=0, xMax=x+width, yMax=y+height, zMax=0};
@@ -427,18 +429,18 @@ widget.createGraphics = function(widget)
     local saveButtonX = loadButtonX + loadButtonWidth+margin;
     local saveButtonWidth = cs*3.0;
 
-    fileGroup:addChild(createLabel("VS-FilenameLabel", "Filename", currentX, currentY, filenameLabelWidth, labelHeight));
-    fileGroup:addChild(createLineEdit("VS-FilenameEdit", filenameEditX, currentY, filenameEditWidth, editHeight, "filename"));
-    fileGroup:addChild(createButton("VS-FilenameButton", filenameButtonX, currentY, filenameButtonWidth, editHeight, "...", FilePressed));
-    fileGroup:addChild(createButton("VS-LoadButton", loadButtonX, currentY, loadButtonWidth, editHeight, "Load", LoadPressed));
-    fileGroup:addChild(createButton("VS-SaveButton", saveButtonX, currentY, saveButtonWidth, editHeight, "Save", SavePressed));
+    fileGroup:addChild(WidgetUtils.createLabel("VS-FilenameLabel", "Filename", currentX, currentY, filenameLabelWidth, labelHeight));
+    fileGroup:addChild(WidgetUtils.createLineEdit("VS-FilenameEdit", filenameEditX, currentY, filenameEditWidth, editHeight, "filename"));
+    fileGroup:addChild(WidgetUtils.createButton("VS-FilenameButton", filenameButtonX, currentY, filenameButtonWidth, editHeight, "...", FilePressed));
+    fileGroup:addChild(WidgetUtils.createButton("VS-LoadButton", loadButtonX, currentY, loadButtonWidth, editHeight, "Load", LoadPressed));
+    fileGroup:addChild(WidgetUtils.createButton("VS-SaveButton", saveButtonX, currentY, saveButtonWidth, editHeight, "Save", SavePressed));
     currentY = currentY-lg;
 
-    fileGroup:addChild(createLabel("TF-FilenameLabel", "Transfer Function File", currentX, currentY, filenameLabelWidth, labelHeight));
-    fileGroup:addChild(createLineEdit("TF-FilenameEdit", filenameEditX, currentY, filenameEditWidth, editHeight, "filename"));
-    fileGroup:addChild(createButton("TF-FilenameButton", filenameButtonX, currentY, filenameButtonWidth, editHeight, "...", FilePressed));
-    fileGroup:addChild(createButton("TF-LoadButton", loadButtonX, currentY, loadButtonWidth, editHeight, "Load", LoadPressed));
-    fileGroup:addChild(createButton("TF-SaveButton", saveButtonX, currentY, saveButtonWidth, editHeight, "Save", SavePressed));
+    fileGroup:addChild(WidgetUtils.createLabel("TF-FilenameLabel", "Transfer Function File", currentX, currentY, filenameLabelWidth, labelHeight));
+    fileGroup:addChild(WidgetUtils.createLineEdit("TF-FilenameEdit", filenameEditX, currentY, filenameEditWidth, editHeight, "filename"));
+    fileGroup:addChild(WidgetUtils.createButton("TF-FilenameButton", filenameButtonX, currentY, filenameButtonWidth, editHeight, "...", FilePressed));
+    fileGroup:addChild(WidgetUtils.createButton("TF-LoadButton", loadButtonX, currentY, loadButtonWidth, editHeight, "Load", LoadPressed));
+    fileGroup:addChild(WidgetUtils.createButton("TF-SaveButton", saveButtonX, currentY, saveButtonWidth, editHeight, "Save", SavePressed));
     currentY = currentY-lg;
 
 
@@ -457,28 +459,28 @@ widget.createGraphics = function(widget)
     tabWidget.Tabs:add(settingsTab);
 
 
-    settingsGroup:addChild(createLabel("TechniqueLabel", "Technique", currentX, currentY, labelWidth, labelHeight));
+    settingsGroup:addChild(WidgetUtils.createLabel("TechniqueLabel", "Technique", currentX, currentY, labelWidth, labelHeight));
     settingsGroup:addChild(createComboBox("TechniqueComboBox", rightCurrentX, currentY, editWidth, editHeight, ComboBoxIndexChanged, "FixedFunction", "RayTraced", "MultiPass"));
     currentY = currentY-lg;
 
-    settingsGroup:addChild(createLabel("ShadingModelLabel", "Shading Model", currentX, currentY, labelWidth, labelHeight));
+    settingsGroup:addChild(WidgetUtils.createLabel("ShadingModelLabel", "Shading Model", currentX, currentY, labelWidth, labelHeight));
     settingsGroup:addChild(createComboBox("ShadingModelComboBox", rightCurrentX, currentY, editWidth, editHeight, ComboBoxIndexChanged, "Standard", "Light", "Isosurface", "MaximumIntensityProjection"));
     currentY = currentY-lg;
 
-    settingsGroup:addChild(createLabel("SampleRatioLabel", "Sample Ratio", currentX, currentY, labelWidth, labelHeight));
-    settingsGroup:addChild(createLineEdit("SampleRatioEdit", rightCurrentX, currentY, editWidth, editHeight, 1.0, 0.0, 1.0, 5));
+    settingsGroup:addChild(WidgetUtils.createLabel("SampleRatioLabel", "Sample Ratio", currentX, currentY, labelWidth, labelHeight));
+    settingsGroup:addChild(WidgetUtils.createLineEdit("SampleRatioEdit", rightCurrentX, currentY, editWidth, editHeight, 1.0, 0.0, 1.0, 5));
     currentY = currentY-lg;
 
-    settingsGroup:addChild(createLabel("SampleRatioWhenMovingLabel", "Sample Ratio When Moving", currentX, currentY, labelWidth, labelHeight));
-    settingsGroup:addChild(createLineEdit("SampleRatioWhenMovingEdit", rightCurrentX, currentY, editWidth, editHeight, 1.0, 0.0, 1.0, 5));
+    settingsGroup:addChild(WidgetUtils.createLabel("SampleRatioWhenMovingLabel", "Sample Ratio When Moving", currentX, currentY, labelWidth, labelHeight));
+    settingsGroup:addChild(WidgetUtils.createLineEdit("SampleRatioWhenMovingEdit", rightCurrentX, currentY, editWidth, editHeight, 1.0, 0.0, 1.0, 5));
     currentY = currentY-lg;
 
-    settingsGroup:addChild(createLabel("CutoffLabel", "Cutoff", currentX, currentY, labelWidth, labelHeight));
-    settingsGroup:addChild(createLineEdit("CutoffEdit", rightCurrentX, currentY, editWidth, editHeight, 0.0, 0.0, 1.0, 5));
+    settingsGroup:addChild(WidgetUtils.createLabel("CutoffLabel", "Cutoff", currentX, currentY, labelWidth, labelHeight));
+    settingsGroup:addChild(WidgetUtils.createLineEdit("CutoffEdit", rightCurrentX, currentY, editWidth, editHeight, 0.0, 0.0, 1.0, 5));
     currentY = currentY-lg;
 
-    settingsGroup:addChild(createLabel("TransparencyLabel", "Transparency", currentX, currentY, labelWidth, labelHeight));
-    settingsGroup:addChild(createLineEdit("TransparencyEdit", rightCurrentX, currentY, editWidth, editHeight, 1.0, 0.0, 1.0, 5));
+    settingsGroup:addChild(WidgetUtils.createLabel("TransparencyLabel", "Transparency", currentX, currentY, labelWidth, labelHeight));
+    settingsGroup:addChild(WidgetUtils.createLineEdit("TransparencyEdit", rightCurrentX, currentY, editWidth, editHeight, 1.0, 0.0, 1.0, 5));
     currentY = currentY-lg;
 
 
