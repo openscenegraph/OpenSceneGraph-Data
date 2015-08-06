@@ -15,7 +15,7 @@ varying mat4 texgen;
 varying vec4 baseColor;
 
 void main(void)
-{ 
+{
     vec4 t0 = vertexPos;
     vec4 te = cameraPos;
 
@@ -69,16 +69,12 @@ void main(void)
 
     vec3 eyeDirection = normalize((te-t0).xyz);
 
-    const float max_iteratrions = 2048.0;
-    float num_iterations = ceil(length((te-t0).xyz)/SampleDensityValue);
-    if (num_iterations<2.0) num_iterations = 2.0;
+    const int max_iteratrions = 2048;
+    int num_iterations = ceil(length((te-t0).xyz)/SampleDensityValue);
+    if (num_iterations<2) num_iterations = 2;
+    if (num_iterations>max_iteratrions) num_iterations = max_iteratrions;
 
-    if (num_iterations>max_iteratrions) 
-    {
-        num_iterations = max_iteratrions;
-    }
-
-    vec3 deltaTexCoord=(te-t0).xyz/float(num_iterations-1.0);
+    vec3 deltaTexCoord=(te-t0).xyz/float(num_iterations-1);
     vec3 texcoord = t0.xyz;
 
     float normalSampleDistance = 1.0/512.0;
@@ -87,7 +83,7 @@ void main(void)
     vec3 deltaZ = vec3(0.0, 0.0, normalSampleDistance);
 
     vec4 fragColor = vec4(0.0, 0.0, 0.0, 0.0); 
-    while(num_iterations>0.0)
+    while(num_iterations>0)
     {
         float v = texture3D( baseTexture, texcoord).a  * tfScale + tfOffset;
         vec4 color = texture1D( tfTexture, v);
@@ -112,7 +108,6 @@ void main(void)
             color.z *= lightScale;
         }
 
-
         float r = color[3]*TransparencyValue;
         if (r>AlphaFuncValue)
         {
@@ -124,7 +119,7 @@ void main(void)
         {
             fragColor = color;
         }
-        texcoord += deltaTexCoord; 
+        texcoord += deltaTexCoord;
 
         --num_iterations;
     }
