@@ -1,3 +1,14 @@
+#version 110
+
+##pragma import_defines(NVIDIA_Corporation)
+
+#if defined(NVIDIA_Corporation)
+    // workaround a NVidia hang when the loop variable is a float, but works fine when it's an int
+    #define loop_type int
+#else
+    #define loop_type float
+#endif
+
 uniform sampler3D baseTexture;
 
 uniform sampler1D tfTexture;
@@ -67,13 +78,13 @@ void main(void)
     t0 = t0 * texgen;
     te = te * texgen;
 
-    const int max_iteratrions = 2048;
-    int num_iterations = ceil(length((te-t0).xyz)/SampleDensityValue);
-    if (num_iterations<2) num_iterations = 2;
+    const loop_type max_iteratrions = loop_type(2048);
+    loop_type num_iterations = loop_type(ceil(length((te-t0).xyz)/SampleDensityValue));
+    if (num_iterations<loop_type(2)) num_iterations = loop_type(2);
     if (num_iterations>max_iteratrions) num_iterations = max_iteratrions;
 
 
-    vec3 deltaTexCoord=(t0-te).xyz/float(num_iterations-1);
+    vec3 deltaTexCoord=(t0-te).xyz/float(num_iterations-loop_type(1));
     vec3 texcoord = te.xyz;
     float previousV = texture3D( baseTexture, texcoord).a;
 
@@ -81,8 +92,8 @@ void main(void)
     vec3 deltaX = vec3(normalSampleDistance, 0.0, 0.0);
     vec3 deltaY = vec3(0.0, normalSampleDistance, 0.0);
     vec3 deltaZ = vec3(0.0, 0.0, normalSampleDistance);
-    
-    while(num_iterations>0)
+
+    while(num_iterations>loop_type(0))
     {
 
         float v = texture3D( baseTexture, texcoord).a;
