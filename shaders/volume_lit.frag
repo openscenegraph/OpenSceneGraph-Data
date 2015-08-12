@@ -71,13 +71,12 @@ void main(void)
 
     float num_iterations = ceil(length((te-t0).xyz)/SampleDensityValue);
 
-    #ifdef NVIDIA_Corporation
-    // Recent NVidia drivers have a bug in length() where it throws nan for some values of input into length() so catch these
-    if (num_iterations!=num_iterations) num_iterations = min_iteratrions;
-    #endif
-
     if (num_iterations<min_iteratrions) num_iterations = min_iteratrions;
     else if (num_iterations>max_iteratrions) num_iterations = max_iteratrions;
+    #ifdef NVIDIA_Corporation
+    // Recent NVidia drivers have a bug in length() where it throws nan for some values of input into length() so catch these
+    else if (num_iterations!=num_iterations) num_iterations = max_iteratrions;
+    #endif
 
     vec3 deltaTexCoord=(te-t0).xyz/float(num_iterations-1.0);
     vec3 texcoord = t0.xyz;
