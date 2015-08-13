@@ -1,3 +1,7 @@
+#version 110
+
+#pragma import_defines(NVIDIA_Corporation)
+
 uniform sampler3D baseTexture;
 
 uniform sampler1D tfTexture;
@@ -69,12 +73,19 @@ void main(void)
 
     vec3 eyeDirection = normalize((te-t0).xyz);
 
-    const int max_iteratrions = 2048;
-    int num_iterations = ceil(length((te-t0).xyz)/SampleDensityValue);
-    if (num_iterations<2) num_iterations = 2;
-    if (num_iterations>max_iteratrions) num_iterations = max_iteratrions;
+    const float min_iteratrions = 2.0;
+    const float max_iteratrions = 2048.0;
 
-    vec3 deltaTexCoord=(te-t0).xyz/float(num_iterations-1);
+    float num_iterations = ceil(length((te-t0).xyz)/SampleDensityValue);
+
+    if (num_iterations<min_iteratrions) num_iterations = min_iteratrions;
+    else if (num_iterations>max_iteratrions) num_iterations = max_iteratrions;
+    #ifdef NVIDIA_Corporation
+    // Recent NVidia drivers have a bug in length() where it throws nan for some values of input into length() so catch these
+    else if (num_iterations!=num_iterations) num_iterations = max_iteratrions;
+    #endif
+
+    vec3 deltaTexCoord=(te-t0).xyz/float(num_iterations-1.0);
     vec3 texcoord = t0.xyz;
 
     float normalSampleDistance = 1.0/512.0;
@@ -82,8 +93,8 @@ void main(void)
     vec3 deltaY = vec3(0.0, normalSampleDistance, 0.0);
     vec3 deltaZ = vec3(0.0, 0.0, normalSampleDistance);
 
-    vec4 fragColor = vec4(0.0, 0.0, 0.0, 0.0); 
-    while(num_iterations>0)
+    vec4 fragColor = vec4(0.0, 0.0, 0.0, 0.0);
+    while(num_iterations>0.0)
     {
         float v = texture3D( baseTexture, texcoord).a  * tfScale + tfOffset;
         vec4 color = texture1D( tfTexture, v);
@@ -126,8 +137,8 @@ void main(void)
 
     fragColor.w *= TransparencyValue;
 
-    if (fragColor.w>1.0) fragColor.w = 1.0; 
+    if (fragColor.w>1.0) fragColor.w = 1.0;
     if (fragColor.w<AlphaFuncValue) discard;
-    
+
     gl_FragColor = fragColor;
 }
