@@ -125,4 +125,4 @@ void main(void)
     vec3 position = gl_Vertex.xyz + gl_Normal.xyz * height_center;
     gl_Position   = gl_ModelViewProjectionMatrix * vec4(position,1.0);
 
-};
+}
