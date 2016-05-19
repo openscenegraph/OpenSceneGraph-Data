@@ -58,17 +58,17 @@ OpenSceneGraph is born
 Users are explicitly given rights
 
 Copy:
- 
+
     As many copies as you wish, and not cost
 
 Modify:
- 
+
     Full access to source,
     and right to modify it to you own needs
 
 
 Distribute:
- 
+
     Right to distribute original works and
     modifications
 
@@ -86,21 +86,21 @@ Distribute:
 <paragraph>
 
 Copy:
- 
+
     Lowers the barrier to entry
     Removes the painful procurment process
     Lower costs, means you can afford more
 
 
-Modify: 
- 
+Modify:
+
     Fix things when they don't work
     Port to new platforms
     Add new features
 
 
 Distribute:
- 
+
     Opens the door to different distribution models
     No longer need to pay royalty payments
 </paragraph>
@@ -112,16 +112,16 @@ Distribute:
 <layer>
 <model position="0.5 0.5 0.0" rotate="20 1 0 0" scale="2">lz.osg</model>
 <paragraph>
- 
+
 Security:
- 
+
     Breaks vendor lock-in
     You have full source code
     You can maitain it yourself
     You can fully QA source code
- 
+
 Productivity:
- 
+
     You can control release schedule
     You can modify software as required
     You can facilitate full platform support
@@ -137,14 +137,14 @@ Productivity:
 
 <paragraph>
 Community:
- 
+
     Like-mind individuals provide support
     Sharing of expertise
     Non adversarily - share and share alike
     Diverse community - diverse contributions
 
 24/7 availability:
- 
+
     Latest developments get rapidly tested
     Bug fix turnaround very rapid
     Positive feedback loop on quality
@@ -159,20 +159,20 @@ Community:
 <model position="0.5 1.0 0.0" rotate="20 1 0 0" scale="10">lz.osg</model>
 <paragraph>
 Catch phrase coding:
-  
+
      Release Early - Release Often
- 
+
      Priortize bug fixing over feature development
- 
+
      If it ain't broke don't fix it
- 
+
      Prepare to throw one away, you will anyhow
- 
+
      Grand plans come undone
- 
+
      Milestones should only be a stones through away
- 
-     Know where you are going - use an 
+
+     Know where you are going - use an
      internal compass when you run off the map
 </paragraph>
 </layer>
