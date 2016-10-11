@@ -1,5 +1,5 @@
 MatrixTransform {
-  DataVariance SATIC
+  DataVariance STATIC
   name "saved_model.osg"
   nodeMask 0xffffffff
   cullingActive TRUE
