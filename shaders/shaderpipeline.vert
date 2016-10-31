@@ -5,38 +5,17 @@
 
 #pragma import_modes ( GL_LIGHTING, GL_LIGHT0)
 #pragma import_defines ( GL_MAX_TEXTURE_UNITS, GL_OBJECT_LINEAR, GL_EYE_LINEAR, GL_SPHERE_MAP, GL_NORMAL_MAP, GL_REFLECTION_MAP )
-#pragma import_texture_modes ( 0, GL_TEXTURE_2D)
-
-varying vec4 vertex_color;
-
-#define GL_TEXTURE0
-
-
-// #define GL_OBJECT_LINEAR 1
-// #define GL_EYE_LINEAR 2
-// #define GL_SPHERE_MAP 3
-// #define GL_NORMAL_MAP 4
-// #define GL_REFLECTION_MAP 5
-
-//#define GL_TEXTURE_GEN_MODE GL_SPHERE_MAP
-//#define GL_TEXTURE_GEN_MODE GL_REFLECTION_MAP
-//#define GL_TEXTURE_GEN_MODE GL_NORMAL_MAP
-// #define GL_TEXTURE_GEN_MODE GL_EYE_LINEAR
+#pragma import_defines ( TEXTURE_VERT_DECLARE0, TEXTURE_VERT_BODY0 )
+#pragma import_defines ( TEXTURE_VERT_DECLARE1, TEXTURE_VERT_BODY1 )
+#pragma import_defines ( TEXTURE_VERT_DECLARE2, TEXTURE_VERT_BODY2 )
+#pragma import_defines ( TEXTURE_VERT_DECLARE3, TEXTURE_VERT_BODY3 )
 
 #if GL_MAX_TEXTURE_UNITS>0
 
-#if 1
-//#ifdef GL_ES
 uniform bool GL_ACTIVE_TEXTURE[GL_MAX_TEXTURE_UNITS];
 uniform int GL_TEXTURE_GEN_MODE[GL_MAX_TEXTURE_UNITS];
 uniform bool GL_TEXTURE_GEN_S[GL_MAX_TEXTURE_UNITS];
 uniform bool GL_TEXTURE_GEN_T[GL_MAX_TEXTURE_UNITS];
-#else
-const bool GL_ACTIVE_TEXTURE[8] = bool[](true, false, false, false, false, false, false, false);
-const int GL_TEXTURE_GEN_MODE[8] = int[](GL_SPHERE_MAP, 0, 0, 0, 0, 0, 0, 0);
-const bool GL_TEXTURE_GEN_S[8] = bool[](true, false, false, false, false, false, false, false);
-const bool GL_TEXTURE_GEN_T[8] = bool[](true, false, false, false, false, false, false, false);
-#endif
 
 vec4 texgen(vec4 texcoord, int unit)
 {
@@ -98,9 +77,13 @@ vec4 texgen(vec4 texcoord, int unit)
     return texcoord;
 }
 
-varying vec4 TexCoord[GL_MAX_TEXTURE_UNITS];
-#define GL_TEXTURE_VERT_BODY0 { TexCoord[0] = gl_MultiTexCoord0; }
+#ifdef TEXTURE_VERT_DECLARE0
+    TEXTURE_VERT_DECLARE0
 #endif
+
+#endif
+
+varying vec4 vertex_color;
 
 void main()
 {
@@ -115,17 +98,18 @@ void main()
 
 // for each active texture unit we need to do the following....
 #if GL_MAX_TEXTURE_UNITS>0
-    #ifdef GL_TEXTURE_VERT_BODY0
-        GL_TEXTURE_VERT_BODY0
+
+    #ifdef TEXTURE_VERT_BODY0
+        TEXTURE_VERT_BODY0
+
+        if (GL_TEXTURE_GEN_MODE[0]!=0)
+        {
+            TexCoord0 = texgen(TexCoord0, 0);
+        }
     #endif
 
-    if (GL_TEXTURE_GEN_MODE[0]!=0)
-    {
-        TexCoord[0] = texgen(TexCoord[0], 0);
-    }
 #endif
 
     gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
-
 
 }

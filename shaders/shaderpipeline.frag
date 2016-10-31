@@ -2,22 +2,18 @@
     precision highp float;
 #endif
 
-#pragma import_defines ( GL_MAX_TEXTURE_UNITS, GL_MODULATE, GL_REPLACE, GL_DECAL,GL_BLEND, GL_ADD )
-#pragma import_texture_modes ( 0, GL_TEXTURE_1D, GL_TEXTURE_2D, GL_TEXTURE_3D, GL_TEXTURE_CUBE_MAP )
+#pragma import_defines ( GL_MAX_TEXTURE_UNITS )
+#pragma import_defines ( GL_MODULATE, GL_REPLACE, GL_DECAL, GL_BLEND, GL_ADD )
 
-#define GL_TEXTURE_2D
+#pragma import_defines ( TEXTURE_FRAG_DECLARE0, TEXTURE_FRAG_BODY0 )
+#pragma import_defines ( TEXTURE_FRAG_DECLARE1, TEXTURE_FRAG_BODY1 )
+#pragma import_defines ( TEXTURE_FRAG_DECLARE2, TEXTURE_FRAG_BODY2 )
+#pragma import_defines ( TEXTURE_FRAG_DECLARE3, TEXTURE_FRAG_BODY3 )
 
 #if GL_MAX_TEXTURE_UNITS>0
 
-#if 1
-//#ifdef GL_ES
 uniform int GL_TEXTURE_ENV_MODE[GL_MAX_TEXTURE_UNITS];
 uniform int GL_TEXTURE_MODE[GL_MAX_TEXTURE_UNITS];
-#else
-const int GL_TEXTURE_ENV_MODE[8] = int[](GL_MODULATE, 0, 0, 0, 0, 0, 0, 0);
-const int GL_TEXTURE_MODE[8] = int[](GL_TEXTURE_2D, 0, 0, 0, 0, 0, 0, 0);
-#endif
-
 
 vec4 texenv_MODULATE(vec4 color, vec4 texture_color) { return color*texture_color; }
 vec4 texenv_REPLACE(vec4 color, vec4 texture_color) { return texture_color; }
@@ -36,33 +32,45 @@ vec4 texenv(vec4 color, vec4 texture_color, int unit)
     else return texenv_MODULATE(color, texture_color);
 }
 
-
-#if defined(GL_TEXTURE_1D)
-    uniform sampler1D sampler0;
-    #define GL_TEXTURE_FRAG_BODY0(color, unit) { color = texenv(color, texture1D( sampler0, TexCoord[unit].s), unit); }
-#elif defined(GL_TEXTURE_2D)
-    uniform sampler2D sampler0;
-    #define GL_TEXTURE_FRAG_BODY0(color, unit) { color = texenv(color, texture2D( sampler0, TexCoord[unit].st), unit); }
-#elif defined(GL_TEXTURE_3D)
-    uniform sampler3D sampler0;
-    #define GL_TEXTURE_FRAG_BODY0(color, unit) { color = texenv(color, texture3D( sampler0, TexCoord[unit].str), unit); }
-#elif defined(GL_TEXTURE_CUBE_MAP)
-    uniform samplerCube sampler0;
-    #define GL_TEXTURE_FRAG_BODY0(color, unit) { color = texenv(color, textureCube( sampler0, TexCoord[unit].str), unit); }
+#ifdef TEXTURE_FRAG_DECLARE0
+    TEXTURE_FRAG_DECLARE0
 #endif
 
+#ifdef TEXTURE_FRAG_DECLARE1
+    TEXTURE_FRAG_DECLARE1
+#endif
 
-varying vec4 TexCoord[GL_MAX_TEXTURE_UNITS];
+#ifdef TEXTURE_FRAG_DECLARE2
+    TEXTURE_FRAG_DECLARE2
+#endif
+
+#ifdef TEXTURE_FRAG_DECLARE3
+    TEXTURE_FRAG_DECLARE3
+#endif
+
 #endif
 
 varying vec4 vertex_color;
+
 
 void main()
 {
     vec4 frag_color = vertex_color;
 
-#if GL_MAX_TEXTURE_UNITS>0
-    GL_TEXTURE_FRAG_BODY0(frag_color, 0);
+#ifdef TEXTURE_FRAG_BODY0
+    TEXTURE_FRAG_BODY0(frag_color)
+#endif
+
+#ifdef TEXTURE_FRAG_BODY1
+    TEXTURE_FRAG_BODY1(frag_color)
+#endif
+
+#ifdef TEXTURE_FRAG_BODY2
+    TEXTURE_FRAG_BODY2(frag_color)
+#endif
+
+#ifdef TEXTURE_FRAG_BODY3
+    TEXTURE_FRAG_BODY3(frag_color)
 #endif
 
     gl_FragColor = frag_color;
