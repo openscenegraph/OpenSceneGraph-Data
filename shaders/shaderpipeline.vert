@@ -101,11 +101,18 @@ void main()
 
     #ifdef TEXTURE_VERT_BODY0
         TEXTURE_VERT_BODY0
+    #endif
 
-        if (GL_TEXTURE_GEN_MODE[0]!=0)
-        {
-            TexCoord0 = texgen(TexCoord0, 0);
-        }
+    #ifdef TEXTURE_VERT_BODY1
+        TEXTURE_VERT_BODY1
+    #endif
+
+    #ifdef TEXTURE_VERT_BODY2
+        TEXTURE_VERT_BODY2
+    #endif
+
+    #ifdef TEXTURE_VERT_BODY3
+        TEXTURE_VERT_BODY3
     #endif
 
 #endif
