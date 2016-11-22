@@ -4,81 +4,96 @@
 #endif
 
 #pragma import_modes ( GL_LIGHTING, GL_LIGHT0)
-#pragma import_defines ( GL_MAX_TEXTURE_UNITS, GL_OBJECT_LINEAR, GL_EYE_LINEAR, GL_SPHERE_MAP, GL_NORMAL_MAP, GL_REFLECTION_MAP )
-#pragma import_defines ( TEXTURE_VERT_DECLARE0, TEXTURE_VERT_BODY0 )
-#pragma import_defines ( TEXTURE_VERT_DECLARE1, TEXTURE_VERT_BODY1 )
-#pragma import_defines ( TEXTURE_VERT_DECLARE2, TEXTURE_VERT_BODY2 )
-#pragma import_defines ( TEXTURE_VERT_DECLARE3, TEXTURE_VERT_BODY3 )
+#pragma import_texture_modes ( GL_TEXTURE_GEN_S, GL_TEXTURE_GEN_T, GL_TEXTURE_GEN_R, GL_TEXTURE_GEN_Q)
+#pragma import_defines ( GL_MAX_TEXTURE_UNITS )
+#pragma import_defines ( TEXTURE_VERT_DECLARE0, TEXTURE_VERT_BODY0, TEXTURE_GEN_FUNCTION0 )
+#pragma import_defines ( TEXTURE_VERT_DECLARE1, TEXTURE_VERT_BODY1, TEXTURE_GEN_FUNCTION1 )
+#pragma import_defines ( TEXTURE_VERT_DECLARE2, TEXTURE_VERT_BODY2, TEXTURE_GEN_FUNCTION2 )
+#pragma import_defines ( TEXTURE_VERT_DECLARE3, TEXTURE_VERT_BODY3, TEXTURE_GEN_FUNCTION3 )
 
 #if GL_MAX_TEXTURE_UNITS>0
 
 uniform bool GL_ACTIVE_TEXTURE[GL_MAX_TEXTURE_UNITS];
-uniform int GL_TEXTURE_GEN_MODE[GL_MAX_TEXTURE_UNITS];
-uniform bool GL_TEXTURE_GEN_S[GL_MAX_TEXTURE_UNITS];
-uniform bool GL_TEXTURE_GEN_T[GL_MAX_TEXTURE_UNITS];
 
-vec4 texgen(vec4 texcoord, int unit)
+uniform vec4 osg_ObjectPlaneR[GL_MAX_TEXTURE_UNITS];
+uniform vec4 osg_ObjectPlaneS[GL_MAX_TEXTURE_UNITS];
+uniform vec4 osg_ObjectPlaneT[GL_MAX_TEXTURE_UNITS];
+uniform vec4 osg_ObjectPlaneQ[GL_MAX_TEXTURE_UNITS];
+
+uniform vec4 osg_EyePlaneR[GL_MAX_TEXTURE_UNITS];
+uniform vec4 osg_EyePlaneS[GL_MAX_TEXTURE_UNITS];
+uniform vec4 osg_EyePlaneT[GL_MAX_TEXTURE_UNITS];
+uniform vec4 osg_EyePlaneQ[GL_MAX_TEXTURE_UNITS];
+
+
+vec4 texgen_EYE_LINEAR(vec4 texcoord, int unit, bool s, bool t, bool r, bool q)
 {
-    int texgen_mode = GL_TEXTURE_GEN_MODE[unit];
-#ifndef GL_ES
-    if (texgen_mode==GL_EYE_LINEAR)
-    {
-        vec4 vertex_eye = gl_ModelViewMatrix * gl_Vertex;
-        texcoord.s = dot(vertex_eye , gl_EyePlaneS[unit]);
-        texcoord.t = dot(vertex_eye , gl_EyePlaneT[unit]);
-        texcoord.r = dot(vertex_eye , gl_EyePlaneR[unit]);
-        texcoord.q = dot(vertex_eye , gl_EyePlaneQ[unit]);
-    }
-    else
-    if (texgen_mode==GL_OBJECT_LINEAR)
-    {
-        texcoord.s = dot(gl_Vertex , gl_ObjectPlaneS[unit]);
-        texcoord.t = dot(gl_Vertex , gl_ObjectPlaneT[unit]);
-        texcoord.r = dot(gl_Vertex , gl_ObjectPlaneR[unit]);
-        texcoord.q = dot(gl_Vertex , gl_ObjectPlaneQ[unit]);
-    }
-    else
-#endif
-    if (texgen_mode==GL_SPHERE_MAP)
-    {
-        vec4 vertex_eye = gl_ModelViewMatrix * gl_Vertex;
-        vec3 normalized_vertex_eye = normalize(vertex_eye.xyz);
-        vec3 normal_eye = gl_NormalMatrix * gl_Normal;
-        //vec3 reflection_vector = normalized_vertex_eye - 2.0 * dot(normalized_vertex_eye, normal_eye) * normal_eye;
-        vec3 reflection_vector = reflect(normalized_vertex_eye, normal_eye);
-        reflection_vector.z = reflection_vector.z + 1.0;
-        float m = 1.0 / (2.0 * length(reflection_vector));
-        //if (GL_TEXTURE_GEN_S[unit])
-        {
-            texcoord.s = reflection_vector.x * m + 0.5;
-        }
-        //if (GL_TEXTURE_GEN_T[unit])
-        {
-            texcoord.t = reflection_vector.y * m + 0.5;
-        }
-    }
-    else
-    if (texgen_mode==GL_REFLECTION_MAP)
-    {
-        vec4 vertex_eye = gl_ModelViewMatrix * gl_Vertex;
-        vec3 normalized_vertex_eye = normalize(vertex_eye.xyz);
-        vec3 normal_eye = gl_NormalMatrix * gl_Normal;
-        float m = 2.0 * dot(normalized_vertex_eye, normal_eye);
-        texcoord.xyz = normalized_vertex_eye - normal_eye * m;
-    }
-    else
-    if (texgen_mode==GL_NORMAL_MAP)
-    {
-        //vec3 normal_eye = gl_NormalMatrix * gl_Normal;
-        vec3 normal_eye = normalize(gl_NormalMatrix * gl_Normal);
-        texcoord.xyz = normal_eye;
-    }
+    vec4 vertex_eye = gl_ModelViewMatrix * gl_Vertex;
+    if (s) texcoord.s = dot(vertex_eye , gl_EyePlaneS[unit]);
+    if (t) texcoord.t = dot(vertex_eye , gl_EyePlaneT[unit]);
+    if (r) texcoord.r = dot(vertex_eye , gl_EyePlaneR[unit]);
+    if (q) texcoord.q = dot(vertex_eye , gl_EyePlaneQ[unit]);
+    return texcoord;
+}
 
+vec4 texgen_OBJECT_LINEAR(vec4 texcoord, int unit, bool s, bool t, bool r, bool q)
+{
+    vec4 vertex_eye = gl_ModelViewMatrix * gl_Vertex;
+    if (s) texcoord.s = dot(gl_Vertex , gl_ObjectPlaneS[unit]);
+    if (t) texcoord.t = dot(gl_Vertex , gl_ObjectPlaneT[unit]);
+    if (r) texcoord.r = dot(gl_Vertex , gl_ObjectPlaneR[unit]);
+    if (q) texcoord.q = dot(gl_Vertex , gl_ObjectPlaneQ[unit]);
+    return texcoord;
+}
+
+vec4 texgen_SPHERE_MAP(vec4 texcoord, int unit, bool s, bool t, bool r, bool q)
+{
+    vec4 vertex_eye = gl_ModelViewMatrix * gl_Vertex;
+    vec3 normalized_vertex_eye = normalize(vertex_eye.xyz);
+    vec3 normal_eye = gl_NormalMatrix * gl_Normal;
+    vec3 reflection_vector = reflect(normalized_vertex_eye, normal_eye);
+    reflection_vector.z = reflection_vector.z + 1.0;
+    float spheremap_m = 1.0 / (2.0 * length(reflection_vector));
+    if (s) texcoord.s = reflection_vector.x * spheremap_m + 0.5;
+    if (t) texcoord.t = reflection_vector.y * spheremap_m + 0.5;
+    return texcoord;
+}
+
+vec4 texgen_REFLECTION_MAP(vec4 texcoord, int unit, bool s, bool t, bool r, bool q)
+{
+    vec4 vertex_eye = gl_ModelViewMatrix * gl_Vertex;
+    vec3 normalized_vertex_eye = normalize(vertex_eye.xyz);
+    vec3 normal_eye = gl_NormalMatrix * gl_Normal;
+    float m = 2.0 * dot(normalized_vertex_eye, normal_eye);
+    if (s) texcoord.s = normalized_vertex_eye.x - normal_eye.x * m;
+    if (t) texcoord.t = normalized_vertex_eye.y - normal_eye.y * m;
+    if (r) texcoord.r = normalized_vertex_eye.z - normal_eye.z * m;
+    return texcoord;
+}
+
+vec4 texgen_NORMAL_MAP(vec4 texcoord, int unit, bool s, bool t, bool r, bool q)
+{
+    vec3 normal_eye = normalize(gl_NormalMatrix * gl_Normal);
+    if (s) texcoord.s = normal_eye.s;
+    if (t) texcoord.s = normal_eye.t;
+    if (r) texcoord.s = normal_eye.r;
     return texcoord;
 }
 
 #ifdef TEXTURE_VERT_DECLARE0
     TEXTURE_VERT_DECLARE0
+#endif
+
+#ifdef TEXTURE_VERT_DECLARE1
+    TEXTURE_VERT_DECLARE1
+#endif
+
+#ifdef TEXTURE_VERT_DECLARE2
+    TEXTURE_VERT_DECLARE2
+#endif
+
+#ifdef TEXTURE_VERT_DECLARE3
+    TEXTURE_VERT_DECLARE3
 #endif
 
 #endif
@@ -89,10 +104,10 @@ void main()
 {
     vertex_color = gl_Color;
 
-#ifdef GL_LIGHTING
+#if GL_LIGHTING
     // for each active light source we need to do lighting
-    #ifdef GL_LIGHT0
-        vertex_color = vertex_color*0.25;
+    #if GL_LIGHT0
+        // vertex_color = vertex_color*0.25;
     #endif
 #endif
 
@@ -101,18 +116,35 @@ void main()
 
     #ifdef TEXTURE_VERT_BODY0
         TEXTURE_VERT_BODY0
+
+        #if defined(TEXTURE_GEN_FUNCTION0) && (GL_TEXTURE_GEN_S0 || GL_TEXTURE_GEN_T0 || GL_TEXTURE_GEN_R0 || GL_TEXTURE_GEN_Q0)
+            TexCoord0 = TEXTURE_GEN_FUNCTION0(TexCoord0, 0, GL_TEXTURE_GEN_S0, GL_TEXTURE_GEN_T0, GL_TEXTURE_GEN_R0, GL_TEXTURE_GEN_Q0);
+        #endif
+
     #endif
 
     #ifdef TEXTURE_VERT_BODY1
         TEXTURE_VERT_BODY1
+
+        #if defined(TEXTURE_GEN_BODY1) && (TEXTURE_GEN_S1 || TEXTURE_GEN_T1 || TEXTURE_GEN_R1 || TEXTURE_GEN_Q1)
+            TexCoord1 = TEXTURE_GEN_FUNCTION1(TexCoord1, 1, GL_TEXTURE_GEN_S1, GL_TEXTURE_GEN_T1, GL_TEXTURE_GEN_R1, GL_TEXTURE_GEN_Q1);
+        #endif
     #endif
 
     #ifdef TEXTURE_VERT_BODY2
         TEXTURE_VERT_BODY2
+
+        #if defined(TEXTURE_GEN_BODY2) && (TEXTURE_GEN_S2 || TEXTURE_GEN_T2 || TEXTURE_GEN_R2 || TEXTURE_GEN_Q2)
+            TexCoord2 = TEXTURE_GEN_FUNCTION2(TexCoord2, 2, GL_TEXTURE_GEN_S2, GL_TEXTURE_GEN_T2, GL_TEXTURE_GEN_R2, GL_TEXTURE_GEN_Q2);
+        #endif
     #endif
 
     #ifdef TEXTURE_VERT_BODY3
         TEXTURE_VERT_BODY3
+
+        #if defined(TEXTURE_GEN_BODY3) && (TEXTURE_GEN_S3 || TEXTURE_GEN_T3 || TEXTURE_GEN_R3 || TEXTURE_GEN_Q3)
+            TexCoord3 = TEXTURE_GEN_FUNCTION3(TexCoord3, 3, GL_TEXTURE_GEN_S3, GL_TEXTURE_GEN_T3, GL_TEXTURE_GEN_R3, GL_TEXTURE_GEN_Q3);
+        #endif
     #endif
 
 #endif
