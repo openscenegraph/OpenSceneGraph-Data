@@ -1,18 +1,22 @@
 $OSG_GLSL_VERSION
-$OSG_PRECISION_FLOAT
 
 #pragma import_defines( BACKDROP_COLOR, OUTLINE )
 
-#if __VERSION__>=400
-    #define osg_TextureQueryLOD textureQueryLod
-    #define USE_SIGNED_DISTNACE_FIELD
-#else
-    #extension GL_ARB_texture_query_lod : enable
-    #ifdef GL_ARB_texture_query_lod
-        #define osg_TextureQueryLOD textureQueryLOD
+#if !defined(GL_ES)
+    #if __VERSION__>=400
+        #define osg_TextureQueryLOD textureQueryLod
         #define USE_SIGNED_DISTNACE_FIELD
+    #else
+        #extension GL_ARB_texture_query_lod : enable
+        #ifdef GL_ARB_texture_query_lod
+            #define osg_TextureQueryLOD textureQueryLOD
+            #define USE_SIGNED_DISTNACE_FIELD
+        #endif
     #endif
 #endif
+
+
+$OSG_PRECISION_FLOAT
 
 //#undef USE_SIGNED_DISTNACE_FIELD
 
@@ -35,7 +39,7 @@ vec4 textureColor()
         // glyph.rgba = (signed_distance, thin_outline, thick_outline, glyph_alpha)
         vec4 glyph = TEXTURE(glyphTexture, texCoord);
 
-    #if 0
+    #if 1
         float blend_ratio = OUTLINE*17.0;
 
         float outline_alpha = 0.0;
