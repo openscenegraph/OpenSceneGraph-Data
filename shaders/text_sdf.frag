@@ -1,20 +1,23 @@
 $OSG_GLSL_VERSION
 
-#pragma import_defines( BACKDROP_COLOR, OUTLINE )
+#pragma import_defines( BACKDROP_COLOR, OUTLINE, SIGNED_DISTNACE_FIELD )
 
-#if !defined(GL_ES)
-    #if __VERSION__>=400
-        #define osg_TextureQueryLOD textureQueryLod
-        #define USE_SIGNED_DISTNACE_FIELD
-    #else
-        #extension GL_ARB_texture_query_lod : enable
-        #ifdef GL_ARB_texture_query_lod
-            #define osg_TextureQueryLOD textureQueryLOD
-            #define USE_SIGNED_DISTNACE_FIELD
+#ifdef SIGNED_DISTNACE_FIELD
+
+    #if !defined(GL_ES)
+        #if __VERSION__>=400
+            #define osg_TextureQueryLOD textureQueryLod
+            #define SIGNED_DISTNACE_FIELD_SUPPORTED
+        #else
+            #extension GL_ARB_texture_query_lod : enable
+            #ifdef GL_ARB_texture_query_lod
+                #define osg_TextureQueryLOD textureQueryLOD
+                #define USE_SIGNED_DISTNACE_FIELD_SUPPORTED
+            #endif
         #endif
     #endif
-#endif
 
+#endif
 
 $OSG_PRECISION_FLOAT
 
@@ -63,7 +66,7 @@ vec4 textureColor()
     #endif
 }
 
-#ifdef USE_SIGNED_DISTNACE_FIELD
+#ifdef USE_SIGNED_DISTNACE_FIELD_SUPPORTED
 vec4 distanceFieldColor()
 {
     float center_alpha = TEXTURE(glyphTexture, texCoord).r;
@@ -115,7 +118,7 @@ vec4 distanceFieldColor()
 void main(void)
 {
 
-#ifdef USE_SIGNED_DISTNACE_FIELD
+#ifdef USE_SIGNED_DISTNACE_FIELD_SUPPORTED
 
     float mml = osg_TextureQueryLOD(glyphTexture, texCoord).x;
 
