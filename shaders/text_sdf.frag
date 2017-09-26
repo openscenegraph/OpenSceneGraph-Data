@@ -2,21 +2,15 @@ $OSG_GLSL_VERSION
 
 #pragma import_defines( BACKDROP_COLOR, OUTLINE, SIGNED_DISTNACE_FIELD )
 
-#ifdef SIGNED_DISTNACE_FIELD
-
-    #if !defined(GL_ES)
-        #if __VERSION__>=400
-            #define osg_TextureQueryLOD textureQueryLod
-            #define SIGNED_DISTNACE_FIELD_SUPPORTED
-        #else
-            #extension GL_ARB_texture_query_lod : enable
-            #ifdef GL_ARB_texture_query_lod
-                #define osg_TextureQueryLOD textureQueryLOD
-                #define SIGNED_DISTNACE_FIELD_SUPPORTED
-            #endif
+#if !defined(GL_ES)
+    #if __VERSION__>=400
+        #define osg_TextureQueryLOD textureQueryLod
+    #else
+        #extension GL_ARB_texture_query_lod : enable
+        #ifdef GL_ARB_texture_query_lod
+            #define osg_TextureQueryLOD textureQueryLOD
         #endif
     #endif
-
 #endif
 
 $OSG_PRECISION_FLOAT
@@ -44,16 +38,7 @@ vec4 textureColor()
         // glyph.rgba = (signed_distance, thin_outline, thick_outline, glyph_alpha)
         vec4 glyph = TEXTURE(glyphTexture, texCoord);
 
-    #ifdef SIGNED_DISTNACE_FIELD_SUPPORTED
-        float blend_ratio = OUTLINE*20.0; // assume inner boundary starts at OUTLINE==0.05
-
-        float outline_alpha = 0.0;
-        if (blend_ratio>2.0) outline_alpha = glyph.b;
-        else if (blend_ratio>1.0) outline_alpha = mix(glyph.g, glyph.b, blend_ratio-1.0);
-        else outline_alpha = glyph.g*blend_ratio;
-    #else
-        float outline_alpha = (OUTLINE<=0.075) ? glyph.g : glyph.b;
-    #endif
+        float outline_alpha = (OUTLINE<=0.1) ? glyph.g : glyph.b;
 
         float alpha = glyph.a+outline_alpha;
         if (alpha>1.0) alpha = 1.0;
@@ -67,17 +52,18 @@ vec4 textureColor()
     #endif
 }
 
-#ifdef SIGNED_DISTNACE_FIELD_SUPPORTED
+#ifdef SIGNED_DISTNACE_FIELD
 vec4 distanceFieldColor()
 {
     float center_alpha = TEXTURELOD(glyphTexture, texCoord, 0.0).r;
+    //float center_alpha = TEXTURE(glyphTexture, texCoord).r;
 
     float blend_width = 0.005;
     float distance_scale = 0.25;
     float edge_distance = (center_alpha-0.5)*distance_scale;
 
     #ifdef OUTLINE
-        float outline_width = OUTLINE*0.5;;
+        float outline_width = OUTLINE*0.5;
         if (edge_distance>blend_width*0.5)
         {
             return vertexColor;
@@ -118,10 +104,18 @@ vec4 distanceFieldColor()
 
 void main(void)
 {
+    float near_fade_away = 2.0;
+    float far_fade_away = near_fade_away+5.0;
 
-#ifdef SIGNED_DISTNACE_FIELD_SUPPORTED
-
+#ifdef osg_TextureQueryLOD
     float mml = osg_TextureQueryLOD(glyphTexture, texCoord).x;
+    if (mml>far_fade_away) discard;
+#else
+    float mml = 0.0;
+#endif
+
+
+#ifdef SIGNED_DISTNACE_FIELD
 
     float near_transition = 0.0;
     float far_transition = near_transition+1.0;
@@ -136,6 +130,8 @@ void main(void)
     vec4 color = textureColor();
 
 #endif
+
+    if (mml>near_fade_away) color.a *= (far_fade_away-mml)/(far_fade_away-near_fade_away);
 
     if (color.a==0.0) discard;
 
