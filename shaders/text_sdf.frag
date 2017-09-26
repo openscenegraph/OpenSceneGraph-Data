@@ -104,6 +104,13 @@ vec4 distanceFieldColor()
 
 void main(void)
 {
+    if (texCoord.x<0.0 && texCoord.y<0.0)
+    {
+        osg_FragColor = vertexColor;
+        return;
+    }
+
+
     float near_fade_away = 2.0;
     float far_fade_away = near_fade_away+5.0;
 
