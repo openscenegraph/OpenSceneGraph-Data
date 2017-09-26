@@ -16,10 +16,12 @@ uniform sampler2D glyphTexture;
 $OSG_VARYING_IN vec2 texCoord;
 $OSG_VARYING_IN vec4 vertexColor;
 
-#if !defined(GL_ES) && __VERSION__>=130
-    #define ALPHA r
-#else
-    #define ALPHA a
+#ifndef ALPHA
+    #if !defined(GL_ES) && __VERSION__>=130
+        #define ALPHA r
+    #else
+        #define ALPHA a
+    #endif
 #endif
 
 void main(void)

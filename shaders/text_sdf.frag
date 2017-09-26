@@ -12,7 +12,7 @@ $OSG_GLSL_VERSION
             #extension GL_ARB_texture_query_lod : enable
             #ifdef GL_ARB_texture_query_lod
                 #define osg_TextureQueryLOD textureQueryLOD
-                #define USE_SIGNED_DISTNACE_FIELD_SUPPORTED
+                #define SIGNED_DISTNACE_FIELD_SUPPORTED
             #endif
         #endif
     #endif
@@ -42,16 +42,15 @@ vec4 textureColor()
         // glyph.rgba = (signed_distance, thin_outline, thick_outline, glyph_alpha)
         vec4 glyph = TEXTURE(glyphTexture, texCoord);
 
-    #if 1
-        float blend_ratio = OUTLINE*17.0;
+    #ifdef SIGNED_DISTNACE_FIELD_SUPPORTED
+        float blend_ratio = OUTLINE*20.0; // assume inner boundary starts at OUTLINE==0.05
 
         float outline_alpha = 0.0;
         if (blend_ratio>2.0) outline_alpha = glyph.b;
         else if (blend_ratio>1.0) outline_alpha = mix(glyph.g, glyph.b, blend_ratio-1.0);
         else outline_alpha = glyph.g*blend_ratio;
     #else
-        float outline_alpha = glyph.g;
-        //float outline_alpha = glyph.b;
+        float outline_alpha = (OUTLINE<=0.075) ? glyph.g : glyph.b;
     #endif
 
         float alpha = glyph.a+outline_alpha;
@@ -66,17 +65,17 @@ vec4 textureColor()
     #endif
 }
 
-#ifdef USE_SIGNED_DISTNACE_FIELD_SUPPORTED
+#ifdef SIGNED_DISTNACE_FIELD_SUPPORTED
 vec4 distanceFieldColor()
 {
     float center_alpha = TEXTURE(glyphTexture, texCoord).r;
 
-    float blend_width = 0.2;
-    float distance_scale = 5.0;
+    float blend_width = 0.005;
+    float distance_scale = 0.25;
     float edge_distance = (center_alpha-0.5)*distance_scale;
 
     #ifdef OUTLINE
-        float outline_width = OUTLINE*17.0;//0.5;
+        float outline_width = OUTLINE*0.5;;
         if (edge_distance>blend_width*0.5)
         {
             return vertexColor;
@@ -118,12 +117,12 @@ vec4 distanceFieldColor()
 void main(void)
 {
 
-#ifdef USE_SIGNED_DISTNACE_FIELD_SUPPORTED
+#ifdef SIGNED_DISTNACE_FIELD_SUPPORTED
 
     float mml = osg_TextureQueryLOD(glyphTexture, texCoord).x;
 
     float near_transition = 0.0;
-    float far_transition = 1.0;
+    float far_transition = near_transition+1.0;
 
     vec4 color;
     if (mml<near_transition) color = distanceFieldColor();
