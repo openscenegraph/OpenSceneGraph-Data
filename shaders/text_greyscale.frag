@@ -26,6 +26,12 @@ $OSG_VARYING_IN vec4 vertexColor;
 
 void main(void)
 {
+    if (texCoord.x<0.0 && texCoord.y<0.0)
+    {
+        osg_FragColor = vertexColor;
+        return;
+    }
+
     float alpha = TEXTURE(glyphTexture, texCoord).ALPHA;
 
     if (alpha==0.0) discard;
