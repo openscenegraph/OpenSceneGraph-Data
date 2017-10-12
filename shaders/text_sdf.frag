@@ -1,6 +1,6 @@
 $OSG_GLSL_VERSION
 
-#pragma import_defines( BACKDROP_COLOR, OUTLINE, SIGNED_DISTNACE_FIELD, TEXTURE_DIMENSION, GLYPH_DIMENSION)
+#pragma import_defines( BACKDROP_COLOR, SHADOW, OUTLINE, SIGNED_DISTNACE_FIELD, TEXTURE_DIMENSION, GLYPH_DIMENSION)
 
 #ifdef GL_ES
     #extension GL_OES_standard_derivatives : enable
@@ -99,11 +99,11 @@ vec4 distanceFieldColorSample(float edge_distance, float blend_width, float  ble
 #endif
 }
 
-vec4 distanceFieldColor()
+vec4 textColor(vec2 src_texCoord)
 {
     float sample_distance_scale = 0.75;
-    vec2 dx = dFdx(texCoord)*sample_distance_scale;
-    vec2 dy = dFdy(texCoord)*sample_distance_scale;
+    vec2 dx = dFdx(src_texCoord)*sample_distance_scale;
+    vec2 dy = dFdy(src_texCoord)*sample_distance_scale;
 
 
     float distance_across_pixel = length(dx+dy)*(TEXTURE_DIMENSION/GLYPH_DIMENSION);
@@ -130,7 +130,7 @@ vec4 distanceFieldColor()
     float blend_half_width = blend_width*0.5;
 
     // check whether fragment is wholly within or outwith glyph body+outline
-    float cd = distanceFromEdge(texCoord); // central distance (distance from center to edge)
+    float cd = distanceFromEdge(src_texCoord); // central distance (distance from center to edge)
     if (cd-blend_half_width>distance_across_pixel) return vertexColor; // pixel fully within glyph body
 
     #ifdef OUTLINE
@@ -142,7 +142,7 @@ vec4 distanceFieldColor()
 
 
     // use multi-sampling to provide high quality antialised fragments
-    vec2 origin = texCoord - dx*0.5 - dy*0.5;
+    vec2 origin = src_texCoord - dx*0.5 - dy*0.5;
     for(;numSamplesY>0; --numSamplesY)
     {
         vec2 pos = origin;
@@ -164,16 +164,16 @@ vec4 distanceFieldColor()
 
 #else
 
-vec4 textureColor()
+vec4 textColor(vec2 src_texCoord)
 {
-    float alpha = TEXTURE(glyphTexture, texCoord).a;
 
 #ifdef OUTLINE
 
+    float alpha = TEXTURE(glyphTexture, src_texCoord).a;
     float delta_tc = 1.6*OUTLINE*GLYPH_DIMENSION/TEXTURE_DIMENSION;
 
     float outline_alpha = alpha;
-    vec2 origin = texCoord-vec2(delta_tc*0.5, delta_tc*0.5);
+    vec2 origin = src_texCoord-vec2(delta_tc*0.5, delta_tc*0.5);
 
     float numSamples = 3.0;
     delta_tc = delta_tc/(numSamples-1);
@@ -191,7 +191,7 @@ vec4 textureColor()
     }
 
     #ifdef osg_TextureQueryLOD
-        float mipmapLevel = osg_TextureQueryLOD(glyphTexture, texCoord).x;
+        float mipmapLevel = osg_TextureQueryLOD(glyphTexture, src_texCoord).x;
         if (mipmapLevel<1.0)
         {
             outline_alpha = mix(1.0-background_alpha, outline_alpha, mipmapLevel/1.0);
@@ -209,8 +209,11 @@ vec4 textureColor()
     return color;
 
 #else
+
+    float alpha = TEXTURE(glyphTexture, src_texCoord).a;
     if (alpha==0.0) vec4(0.0, 0.0, 0.0, 0.0);
     return vec4(vertexColor.rgb, vertexColor.a * alpha);
+
 #endif
 }
 
@@ -225,10 +228,16 @@ void main(void)
         return;
     }
 
-#ifdef SIGNED_DISTNACE_FIELD
-    vec4 color = distanceFieldColor();
+#ifdef SHADOW
+    float scale = -1.0*GLYPH_DIMENSION/TEXTURE_DIMENSION;
+    vec2 delta_tc = SHADOW*scale;
+    vec4 shadow_color = textColor(texCoord+delta_tc);
+    shadow_color.rgb = BACKDROP_COLOR.rgb;
+
+    vec4 glyph_color = textColor(texCoord);
+    vec4 color = mix(shadow_color, glyph_color, glyph_color.a);
 #else
-    vec4 color = textureColor();
+    vec4 color = textColor(texCoord);
 #endif
 
     if (color.a==0.0) discard;
