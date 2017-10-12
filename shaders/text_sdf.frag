@@ -9,9 +9,18 @@ $OSG_GLSL_VERSION
     #endif
 #endif
 
-$OSG_PRECISION_FLOAT
+#if !defined(GL_ES)
+    #if __VERSION__>=400
+        #define osg_TextureQueryLOD textureQueryLod
+    #else
+        #extension GL_ARB_texture_query_lod : enable
+        #ifdef GL_ARB_texture_query_lod
+            #define osg_TextureQueryLOD textureQueryLOD
+        #endif
+    #endif
+#endif
 
-#undef SIGNED_DISTNACE_FIELD
+$OSG_PRECISION_FLOAT
 
 #if __VERSION__>=130
     #define TEXTURE texture
@@ -27,6 +36,14 @@ uniform sampler2D glyphTexture;
 
 $OSG_VARYING_IN vec2 texCoord;
 $OSG_VARYING_IN vec4 vertexColor;
+
+#ifndef TEXTURE_DIMENSION
+const float TEXTURE_DIMENSION = 1024.0;
+#endif
+
+#ifndef GLYPH_DIMENSION
+const float GLYPH_DIMENSION = 32.0;
+#endif
 
 #ifdef SIGNED_DISTNACE_FIELD
 
@@ -88,13 +105,6 @@ vec4 distanceFieldColor()
     vec2 dx = dFdx(texCoord)*sample_distance_scale;
     vec2 dy = dFdy(texCoord)*sample_distance_scale;
 
-    #ifndef TEXTURE_DIMENSION
-    float TEXTURE_DIMENSION = 1024.0;
-    #endif
-
-    #ifndef GLYPH_DIMENSION
-    float GLYPH_DIMENSION = 32.0;
-    #endif
 
     float distance_across_pixel = length(dx+dy)*(TEXTURE_DIMENSION/GLYPH_DIMENSION);
 
@@ -151,26 +161,57 @@ vec4 distanceFieldColor()
 
     return total_color;
 }
+
 #else
 
 vec4 textureColor()
 {
-    #ifdef OUTLINE
-        // glyph.rgba = (signed_distance, thin_outline, thick_outline, glyph_alpha)
-        vec4 glyph = TEXTURE(glyphTexture, texCoord);
+    float alpha = TEXTURE(glyphTexture, texCoord).a;
 
-        float outline_alpha = (OUTLINE<=0.05) ? glyph.g : glyph.b;
+#ifdef OUTLINE
 
-        float alpha = glyph.a+outline_alpha;
-        if (alpha>1.0) alpha = 1.0;
+    float delta_tc = 1.6*OUTLINE*GLYPH_DIMENSION/TEXTURE_DIMENSION;
 
-        return vec4( vertexColor.rgb*glyph.a + BACKDROP_COLOR.rgb*outline_alpha, alpha);
+    float outline_alpha = alpha;
+    vec2 origin = texCoord-vec2(delta_tc*0.5, delta_tc*0.5);
 
-    #else
-        float alpha = TEXTURE(glyphTexture, texCoord).a;
-        if (alpha==0.0) vec4(0.0, 0.0, 0.0, 0.0);
-        return vec4(vertexColor.rgb, alpha);
+    float numSamples = 3.0;
+    delta_tc = delta_tc/(numSamples-1);
+
+    float background_alpha = 1.0;
+
+    for(float i=0.0; i<numSamples; ++i)
+    {
+        for(float j=0.0; j<numSamples; ++j)
+        {
+            float local_alpha = TEXTURE(glyphTexture, origin + vec2(i*delta_tc, j*delta_tc)).a;
+            outline_alpha = max(outline_alpha, local_alpha);
+            background_alpha = background_alpha * (1.0-local_alpha);
+        }
+    }
+
+    #ifdef osg_TextureQueryLOD
+        float mipmapLevel = osg_TextureQueryLOD(glyphTexture, texCoord).x;
+        if (mipmapLevel<1.0)
+        {
+            outline_alpha = mix(1.0-background_alpha, outline_alpha, mipmapLevel/1.0);
+        }
     #endif
+
+    if (outline_alpha<alpha) outline_alpha = alpha;
+    if (outline_alpha>1.0) outline_alpha = 1.0;
+
+    if (outline_alpha==0.0) return vec4(0.0, 0.0, 0.0, 0.0); // outside glyph and outline
+
+    vec4 color = mix(BACKDROP_COLOR, vertexColor, smoothstep(0.0, 1.0, alpha));
+    color.a = smoothstep(0.0, 1.0, outline_alpha);
+
+    return color;
+
+#else
+    if (alpha==0.0) vec4(0.0, 0.0, 0.0, 0.0);
+    return vec4(vertexColor.rgb, vertexColor.a * alpha);
+#endif
 }
 
 #endif
