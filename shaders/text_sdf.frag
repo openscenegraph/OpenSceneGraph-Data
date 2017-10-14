@@ -32,6 +32,16 @@ $OSG_PRECISION_FLOAT
     #define osg_FragColor gl_FragColor
 #endif
 
+
+#if !defined(GL_ES) && __VERSION__>=130
+    #define ALPHA r
+    #define SDF g
+#else
+    #define ALPHA a
+    #define SDF r
+#endif
+
+
 uniform sampler2D glyphTexture;
 
 $OSG_VARYING_IN vec2 texCoord;
@@ -49,7 +59,7 @@ const float GLYPH_DIMENSION = 32.0;
 
 float distanceFromEdge(vec2 tc)
 {
-    float center_alpha = TEXTURELOD(glyphTexture, tc, 0.0).r;
+    float center_alpha = TEXTURELOD(glyphTexture, tc, 0.0).SDF;
     if (center_alpha==0.0) return -1.0;
 
     //float distance_scale = (1.0/4.0)*1.41;
@@ -169,7 +179,7 @@ vec4 textColor(vec2 src_texCoord)
 
 #ifdef OUTLINE
 
-    float alpha = TEXTURE(glyphTexture, src_texCoord).a;
+    float alpha = TEXTURE(glyphTexture, src_texCoord).ALPHA;
     float delta_tc = 1.6*OUTLINE*GLYPH_DIMENSION/TEXTURE_DIMENSION;
 
     float outline_alpha = alpha;
@@ -184,7 +194,7 @@ vec4 textColor(vec2 src_texCoord)
     {
         for(float j=0.0; j<numSamples; ++j)
         {
-            float local_alpha = TEXTURE(glyphTexture, origin + vec2(i*delta_tc, j*delta_tc)).a;
+            float local_alpha = TEXTURE(glyphTexture, origin + vec2(i*delta_tc, j*delta_tc)).ALPHA;
             outline_alpha = max(outline_alpha, local_alpha);
             background_alpha = background_alpha * (1.0-local_alpha);
         }
@@ -210,7 +220,7 @@ vec4 textColor(vec2 src_texCoord)
 
 #else
 
-    float alpha = TEXTURE(glyphTexture, src_texCoord).a;
+    float alpha = TEXTURE(glyphTexture, src_texCoord).ALPHA;
     if (alpha==0.0) vec4(0.0, 0.0, 0.0, 0.0);
     return vec4(vertexColor.rgb, vertexColor.a * alpha);
 
