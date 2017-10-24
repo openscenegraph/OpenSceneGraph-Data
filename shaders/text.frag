@@ -186,7 +186,7 @@ vec4 textColor(vec2 src_texCoord)
     vec2 origin = src_texCoord-vec2(delta_tc*0.5, delta_tc*0.5);
 
     float numSamples = 3.0;
-    delta_tc = delta_tc/(numSamples-1);
+    delta_tc = delta_tc/(numSamples-1.0);
 
     float background_alpha = 1.0;
 
