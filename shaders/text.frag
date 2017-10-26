@@ -79,15 +79,15 @@ vec4 distanceFieldColorSample(float edge_distance, float blend_width, float  ble
     }
     else if (edge_distance>-blend_half_width)
     {
-        return mix(vertexColor, BACKDROP_COLOR, smoothstep(0.0, 1.0, (blend_half_width-edge_distance)/(blend_width)));
+        return mix(vertexColor, vec4(BACKDROP_COLOR.rgb, BACKDROP_COLOR.a*vertexColor.a), smoothstep(0.0, 1.0, (blend_half_width-edge_distance)/(blend_width)));
     }
     else if (edge_distance>(blend_half_width-outline_width))
     {
-        return BACKDROP_COLOR;
+        return vec4(BACKDROP_COLOR.rgb, BACKDROP_COLOR.a*vertexColor.a);
     }
     else if (edge_distance>-(outline_width+blend_half_width))
     {
-        return vec4(BACKDROP_COLOR.rgb, ((blend_half_width+outline_width+edge_distance)/blend_width));
+        return vec4(BACKDROP_COLOR.rgb, vertexColor.a * ((blend_half_width+outline_width+edge_distance)/blend_width));
     }
     else
     {
@@ -100,7 +100,7 @@ vec4 distanceFieldColorSample(float edge_distance, float blend_width, float  ble
     }
     else if (edge_distance>-blend_half_width)
     {
-        return vec4(vertexColor.rgb, smoothstep(1.0, 0.0, (blend_half_width-edge_distance)/(blend_width)));
+        return vec4(vertexColor.rgb, vertexColor.a * smoothstep(1.0, 0.0, (blend_half_width-edge_distance)/(blend_width)));
     }
     else
     {
@@ -214,7 +214,7 @@ vec4 textColor(vec2 src_texCoord)
     if (outline_alpha==0.0) return vec4(0.0, 0.0, 0.0, 0.0); // outside glyph and outline
 
     vec4 color = mix(BACKDROP_COLOR, vertexColor, smoothstep(0.0, 1.0, alpha));
-    color.a = smoothstep(0.0, 1.0, outline_alpha);
+    color.a = vertexColor.a * smoothstep(0.0, 1.0, outline_alpha);
 
     return color;
 
