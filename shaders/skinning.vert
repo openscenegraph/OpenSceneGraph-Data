@@ -17,7 +17,7 @@ in vec4 boneWeight1;
 in vec4 boneWeight2;
 in vec4 boneWeight3;
 
-uniform int nbBonesPerVertex;
+uniform uint nbBonesPerVertex;
 uniform mat4 matrixPalette[MAX_MATRIX];
 
 vec4 position;
@@ -47,7 +47,7 @@ void main( void )
 {
     position =  vec4(0.0,0.0,0.0,0.0);
 		normal = vec3(0.0,0.0,0.0);
-
+    gl_TexCoord[0] = gl_MultiTexCoord0;
     // there is 2 bone data per attributes
     if (nbBonesPerVertex > 0)
         computeAcummulatedNormalAndPosition(boneWeight0);
