@@ -97,7 +97,7 @@ highp float r = partProperties.y;
 highp float _coeff_A = 1.0;
 highp float _coeff_B = 1.0;
 highp vec3  velocityNormalized = normalize(partPrevVelocity.xyz);
-highp float R = _coeff_A * r * velocityNormalized + _coeff_B * r * r * velocityNormalized * velocityNormalized;
+highp float R = _coeff_A * r * velocityNormalized.x + _coeff_B * r * r * velocityNormalized.y * velocityNormalized.z;
 highp vec3  fr = -R * vec3(partPrevVelocity.xyz);
 highp float mass =  1000.0 *  r*r*r *3.141572 *0.75;
 highp float massInvers = 1.0 / mass;
@@ -105,7 +105,7 @@ highp vec3 dv = fr * massInvers * osg_DeltaFrameTime;
 
 
 vec3 vortAxis = vec3(0, 1, 0);
-highp float l = vortAxis * ( partPrevPos.xyz - vec3(0.5, 0.5, 0.5));
+highp float l = dot(vortAxis, ( partPrevPos.xyz - vec3(0.5, 0.5, 0.5)));
 highp vec3 lc = vec3(0.5, 0.5, 0.5) + vortAxis * l;
 highp vec3 Ra = partPrevPos.xyz - lc;
 highp vec3 vVort = cross(Ra, vortAxis) * massInvers ;
