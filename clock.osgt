@@ -365,7 +365,6 @@ osg::MatrixTransform {
               }
             }
           }
-          NodeMask ff 
           Children 1 {
             osg::Geode {
               UniqueID 21 
@@ -462,7 +461,6 @@ osg::MatrixTransform {
               }
             }
           }
-          NodeMask ff 
           Children 1 {
             osg::Geode {
               UniqueID 26 
@@ -532,7 +530,6 @@ osg::MatrixTransform {
       UniqueID 28 
       Name "BackClockFace" 
       DataVariance DYNAMIC 
-      NodeMask ff 
       Children 1 {
         osg::Group {
           UniqueID 9 
