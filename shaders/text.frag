@@ -1,11 +1,11 @@
 $OSG_GLSL_VERSION
 
-#pragma import_defines( BACKDROP_COLOR, SHADOW, OUTLINE, SIGNED_DISTNACE_FIELD, TEXTURE_DIMENSION, GLYPH_DIMENSION)
+#pragma import_defines( BACKDROP_COLOR, SHADOW, OUTLINE, SIGNED_DISTANCE_FIELD, TEXTURE_DIMENSION, GLYPH_DIMENSION)
 
 #ifdef GL_ES
     #extension GL_OES_standard_derivatives : enable
     #ifndef GL_OES_standard_derivatives
-        #undef SIGNED_DISTNACE_FIELD
+        #undef SIGNED_DISTANCE_FIELD
     #endif
 #endif
 
@@ -55,7 +55,7 @@ const float TEXTURE_DIMENSION = 1024.0;
 const float GLYPH_DIMENSION = 32.0;
 #endif
 
-#ifdef SIGNED_DISTNACE_FIELD
+#ifdef SIGNED_DISTANCE_FIELD
 
 float distanceFromEdge(vec2 tc)
 {
