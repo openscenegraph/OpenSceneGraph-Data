@@ -4,19 +4,30 @@
     precision highp float;
 #endif
 
-#pragma import_defines(GL_LIGHTING, GL_TEXTURE_2D, GL_FOG)
+#pragma import_defines(GL_LIGHTING, GL_TEXTURE_2D)
 
-#if defined(GL_LIGHTING)
-varying vec3 normalDir;
-varying vec3 lightDir;
-#endif
 
-#if defined(GL_LIGHTING) || defined(GL_FOG)
-varying vec3 viewDir;
+#ifdef GL_LIGHTING
+void directionalLight( int lightNum, vec3 normal, inout vec4 color )
+{
+    vec3 n = normalize(gl_NormalMatrix * normal);
+
+    float NdotL = dot( n, normalize(gl_LightSource[lightNum].position.xyz) );
+    NdotL = max( 0.0, NdotL );
+
+    float NdotHV = dot( n, gl_LightSource[lightNum].halfVector.xyz );
+    NdotHV = max( 0.0, NdotHV );
+
+    color *= gl_FrontLightModelProduct.sceneColor +
+             gl_FrontLightProduct[lightNum].ambient +
+             gl_FrontLightProduct[lightNum].diffuse * NdotL;
+
+    if ( NdotL * NdotHV > 0.0 )
+        color += gl_FrontLightProduct[lightNum].specular * pow( NdotHV, gl_FrontMaterial.shininess );
+}
 #endif
 
 varying vec4 vertexColor;
-
 
 void main()
 {
@@ -26,18 +37,9 @@ void main()
   gl_TexCoord[0] = gl_MultiTexCoord0;
 #endif
 
-#if defined(GL_LIGHTING) || defined(GL_FOG)
-  viewDir = -vec3(gl_ModelViewMatrix * gl_Vertex);
-#endif
+  vertexColor = gl_Color;
 
 #if defined(GL_LIGHTING)
-  normalDir = gl_NormalMatrix * gl_Normal;
-  vec4 lpos = gl_LightSource[0].position;
-  if (lpos.w == 0.0)
-    lightDir = lpos.xyz;
-  else
-    lightDir = lpos.xyz + viewDir;
+    directionalLight(0, gl_Normal, vertexColor);
 #endif
-
-  vertexColor = gl_Color;
 }
