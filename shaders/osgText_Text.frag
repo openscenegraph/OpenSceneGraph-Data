@@ -1,6 +1,7 @@
 $OSG_GLSL_VERSION
 
-#pragma import_defines( BACKDROP_COLOR, SHADOW, OUTLINE, SIGNED_DISTANCE_FIELD, TEXTURE_DIMENSION, GLYPH_DIMENSION)
+#pragma import_defines( BACKDROP_COLOR, SHADOW, OUTLINE)
+#pragma import_defines( SIGNED_DISTANCE_FIELD, TEXTURE_DIMENSION, GLYPH_DIMENSION)
 
 #ifdef GL_ES
     #extension GL_OES_standard_derivatives : enable
