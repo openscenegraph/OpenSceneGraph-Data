@@ -49,13 +49,13 @@ void main( void )
 		normal = vec3(0.0,0.0,0.0);
     gl_TexCoord[0] = gl_MultiTexCoord0;
     // there is 2 bone data per attributes
-    if (nbBonesPerVertex > 0)
+    if (nbBonesPerVertex > 0u)
         computeAcummulatedNormalAndPosition(boneWeight0);
-    if (nbBonesPerVertex > 2)
+    if (nbBonesPerVertex > 2u)
         computeAcummulatedNormalAndPosition(boneWeight1);
-    if (nbBonesPerVertex > 4)
+    if (nbBonesPerVertex > 4u)
         computeAcummulatedNormalAndPosition(boneWeight2);
-    if (nbBonesPerVertex > 6)
+    if (nbBonesPerVertex > 6u)
         computeAcummulatedNormalAndPosition(boneWeight3);
 
     normal = gl_NormalMatrix * normal;
