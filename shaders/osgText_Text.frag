@@ -21,18 +21,26 @@ $OSG_GLSL_VERSION
     #endif
 #endif
 
-$OSG_PRECISION_FLOAT
-
 #if __VERSION__>=130
     #define TEXTURE texture
-    #define TEXTURELOD textureLod
-    out vec4 osg_FragColor;
 #else
     #define TEXTURE texture2D
-    #define TEXTURELOD texture2DLod
-    #define osg_FragColor gl_FragColor
 #endif
 
+#if __VERSION__>=130
+    #define TEXTURELOD textureLod
+#else
+    #ifdef GL_ES
+        #extension GL_EXT_shader_texture_lod : enable
+        #ifdef GL_EXT_shader_texture_lod
+            #define TEXTURELOD texture2DLodEXT
+        #else
+            #define TEXTURELOD texture2DLod
+        #endif
+    #else
+        #define TEXTURELOD texture2DLod
+    #endif
+#endif
 
 #if !defined(GL_ES) && __VERSION__>=130
     #define ALPHA r
@@ -42,6 +50,13 @@ $OSG_PRECISION_FLOAT
     #define SDF r
 #endif
 
+$OSG_PRECISION_FLOAT
+
+#if __VERSION__>=130
+    out vec4 osg_FragColor;
+#else
+    #define osg_FragColor gl_FragColor
+#endif
 
 uniform sampler2D glyphTexture;
 
