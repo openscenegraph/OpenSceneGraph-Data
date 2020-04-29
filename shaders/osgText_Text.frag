@@ -21,18 +21,26 @@ $OSG_GLSL_VERSION
     #endif
 #endif
 
-$OSG_PRECISION_FLOAT
-
 #if __VERSION__>=130
     #define TEXTURE texture
-    #define TEXTURELOD textureLod
-    out vec4 osg_FragColor;
 #else
     #define TEXTURE texture2D
-    #define TEXTURELOD texture2DLod
-    #define osg_FragColor gl_FragColor
 #endif
 
+#if __VERSION__>=130
+    #define TEXTURELOD textureLod
+#else
+    #ifdef GL_ES
+        #extension GL_EXT_shader_texture_lod : enable
+        #ifdef GL_EXT_shader_texture_lod
+            #define TEXTURELOD texture2DLodEXT
+        #else
+            #define TEXTURELOD texture2DLod
+        #endif
+    #else
+        #define TEXTURELOD texture2DLod
+    #endif
+#endif
 
 #if !defined(GL_ES) && __VERSION__>=130
     #define ALPHA r
@@ -42,6 +50,13 @@ $OSG_PRECISION_FLOAT
     #define SDF r
 #endif
 
+$OSG_PRECISION_FLOAT
+
+#if __VERSION__>=130
+    out vec4 osg_FragColor;
+#else
+    #define osg_FragColor gl_FragColor
+#endif
 
 uniform sampler2D glyphTexture;
 
@@ -70,45 +85,49 @@ float distanceFromEdge(vec2 tc)
     return (center_alpha-0.5)*distance_scale;
 }
 
-vec4 distanceFieldColorSample(float edge_distance, float blend_width, float  blend_half_width)
-{
 #ifdef OUTLINE
+vec2 colorCoeff(float edge_distance, float blend_width, float blend_half_width)
+{
     float outline_width = OUTLINE*0.5;
     if (edge_distance>blend_half_width)
     {
-        return vertexColor;
+        return vec2(1.0, 0.0);
     }
     else if (edge_distance>-blend_half_width)
     {
-        return mix(vertexColor, vec4(BACKDROP_COLOR.rgb, BACKDROP_COLOR.a*vertexColor.a), smoothstep(0.0, 1.0, (blend_half_width-edge_distance)/(blend_width)));
+        float f = smoothstep(0.0, 1.0, (blend_half_width-edge_distance)/(blend_width));
+        return vec2(1.0 - f, f);
     }
     else if (edge_distance>(blend_half_width-outline_width))
     {
-        return vec4(BACKDROP_COLOR.rgb, BACKDROP_COLOR.a*vertexColor.a);
+        return vec2(0.0, 1.0);
     }
     else if (edge_distance>-(outline_width+blend_half_width))
     {
-        return vec4(BACKDROP_COLOR.rgb, vertexColor.a * ((blend_half_width+outline_width+edge_distance)/blend_width));
+        return vec2(0.0, smoothstep(0.0, 1.0, (blend_half_width+outline_width+edge_distance)/blend_width));
     }
     else
     {
-        return vec4(0.0, 0.0, 0.0, 0.0);
+        return vec2(0.0, 0.0);
     }
+}
 #else
+float colorCoeff(float edge_distance, float blend_width, float blend_half_width)
+{
     if (edge_distance>blend_half_width)
     {
-        return vertexColor;
+        return 1.0;
     }
     else if (edge_distance>-blend_half_width)
     {
-        return vec4(vertexColor.rgb, vertexColor.a * smoothstep(1.0, 0.0, (blend_half_width-edge_distance)/(blend_width)));
+        return smoothstep(1.0, 0.0, (blend_half_width-edge_distance)/(blend_width));
     }
     else
     {
-        return vec4(0.0, 0.0, 0.0, 0.0);
+        return 0.0;
     }
-#endif
 }
+#endif
 
 vec4 textColor(vec2 src_texCoord)
 {
@@ -134,9 +153,6 @@ vec4 textColor(vec2 src_texCoord)
     vec2 delta_ty = dy/float(numSamplesY-1);
 
     float numSamples = float(numSamplesX)*float(numSamplesY);
-    float scale = 1.0/numSamples;
-    vec4 total_color = vec4(0.0,0.0,0.0,0.0);
-
     float blend_width = 1.5*distance_across_pixel/numSamples;
     float blend_half_width = blend_width*0.5;
 
@@ -147,10 +163,11 @@ vec4 textColor(vec2 src_texCoord)
     #ifdef OUTLINE
     float outline_width = OUTLINE*0.5;
     if ((-cd-outline_width-blend_half_width)>distance_across_pixel) return vec4(0.0, 0.0, 0.0, 0.0); // pixel fully outside outline+glyph body
+    vec2 color_coeff = vec2(0.0, 0.0);
     #else
     if (-cd-blend_half_width>distance_across_pixel) return vec4(0.0, 0.0, 0.0, 0.0); // pixel fully outside glyph body
+    float color_coeff = 0.0;
     #endif
-
 
     // use multi-sampling to provide high quality antialised fragments
     vec2 origin = src_texCoord - dx*0.5 - dy*0.5;
@@ -160,17 +177,28 @@ vec4 textColor(vec2 src_texCoord)
         int numX = numSamplesX;
         for(;numX>0; --numX)
         {
-            vec4 c = distanceFieldColorSample(distanceFromEdge(pos), blend_width, blend_half_width);
-            total_color = total_color + c * c.a;
+        #ifdef OUTLINE
+            color_coeff += colorCoeff(distanceFromEdge(pos), blend_width, blend_half_width);
+        #else
+            color_coeff += colorCoeff(distanceFromEdge(pos), blend_width, blend_half_width);
+        #endif
             pos += delta_tx;
         }
         origin += delta_ty;
     }
+    color_coeff /= numSamples;
+    
+    #ifdef OUTLINE
+        float vertex_alpha = vertexColor.a * color_coeff.x;
+        float outline_alpha = BACKDROP_COLOR.a * color_coeff.y;
+        float total_alpha = vertex_alpha + outline_alpha;
 
-    total_color.rgb /= total_color.a;
-    total_color.a *= scale;
+        if (total_alpha <= 0.0) return vec4(0.0, 0.0, 0.0, 0.0);
 
-    return total_color;
+        return vec4(vertexColor.rgb * (vertex_alpha / total_alpha) + BACKDROP_COLOR.rgb * (outline_alpha / total_alpha), total_alpha);
+    #else
+        return vec4(vertexColor.rgb, vertexColor.a * color_coeff);
+    #endif
 }
 
 #else
